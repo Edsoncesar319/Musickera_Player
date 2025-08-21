@@ -30,4 +30,22 @@ else
     exit 1
 fi
 
+# Verificar sintaxe Python
+echo "🔍 Verificando sintaxe Python..."
+python -m py_compile api/index.py
+if [ $? -eq 0 ]; then
+    echo "✅ Sintaxe Python válida"
+else
+    echo "❌ Erro de sintaxe Python"
+    exit 1
+fi
+
+# Verificar se o arquivo de configuração existe
+if [ -f "api/config.py" ]; then
+    echo "✅ Arquivo de configuração encontrado"
+else
+    echo "❌ Erro: api/config.py não encontrado"
+    exit 1
+fi
+
 echo "✅ Build concluído com sucesso!"
