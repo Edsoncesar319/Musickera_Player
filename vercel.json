@@ -1,12 +1,24 @@
 {
   "version": 2,
+  "buildCommand": "bash vercel-build.sh",
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb"
+      }
     },
     {
       "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "favicon.ico",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "musics/**",
       "use": "@vercel/static"
     }
   ],
@@ -16,13 +28,26 @@
       "dest": "/api/index.py"
     },
     {
+      "src": "/musics/(.*)",
+      "dest": "/musics/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
   ],
   "functions": {
     "api/index.py": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "runtime": "python3.9"
     }
+  },
+  "env": {
+    "MUSIC_DIR": "/tmp/musics",
+    "COVERS_DIR": "/tmp/covers"
   }
 }
