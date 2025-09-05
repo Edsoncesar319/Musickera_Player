@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="shortcut icon" href="favicon.ico" type="image/png" />
     <meta name="google-adsense-account" content="ca-pub-1074925740865557">
-    <title>Musickera</title>
+    <title>Musickêra</title>
     <style>
         * {
             margin: 0;
@@ -54,7 +54,7 @@
 
         .header h1 {
             font-size: 28px;
-            background: linear-gradient(45deg, #1DB954, #1ed760);
+            background: linear-gradient(45deg, #02f82b, #1ed760);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -198,7 +198,226 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             margin-bottom: 8px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: #1DB954;
+            font-size: 16px;
+            font-weight: 500;
+            background: rgba(29, 185, 84, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(29, 185, 84, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* ===== BARRA DE PROGRESSO DE DOWNLOAD ===== */
+        .download-progress-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 10000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .download-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .download-progress-header h3 {
+            margin: 0;
+            color: #1DB954;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-progress-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .close-progress-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .download-progress-content {
+            margin-bottom: 20px;
+        }
+
+        .overall-progress {
+            margin-bottom: 24px;
+        }
+
+        .progress-label {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1DB954, #1ed760);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            color: #1DB954;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .playlist-progress-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .playlist-progress-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid #1DB954;
+        }
+
+        .playlist-progress-item.completed {
+            border-left-color: #1DB954;
+            background: rgba(29, 185, 84, 0.1);
+        }
+
+        .playlist-progress-item.error {
+            border-left-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .playlist-progress-item.processing {
+            border-left-color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .playlist-name {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .playlist-status {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .playlist-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .playlist-progress-fill {
+            height: 100%;
+            background: #1DB954;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .playlist-progress-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+            text-align: right;
+        }
+
+        .download-progress-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .download-status {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .download-stats {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .download-progress-container {
+                width: 95%;
+                padding: 16px;
+            }
+
+            .download-progress-header h3 {
+                font-size: 16px;
+            }
+
+            .playlist-progress-list {
+                max-height: 200px;
+            }
         }
 
         .search-result-item:hover {
@@ -380,6 +599,36 @@
             max-width: 1400px;
             margin: 0 auto;
             width: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Estilos para o modo zoom do player */
+        .player-section.zoomed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            grid-template-columns: 1fr;
+            max-width: none;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-section.zoomed .player-container {
+            max-width: 800px;
+            width: 100%;
+            transform: scale(1.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .player-section.zoomed .playlist {
+            display: none;
         }
 
         .player-container {
@@ -416,6 +665,43 @@
         .album-cover:hover {
             transform: scale(1.02);
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Estilos para borda neon na capa do álbum */
+        .album-cover.neon-border {
+            --neon-color: #1DB954;
+            --neon-glow: 0 0 30px rgba(29, 185, 84, 0.8), 0 0 60px rgba(29, 185, 84, 0.6), 0 0 90px rgba(29, 185, 84, 0.4);
+            border: 3px solid var(--neon-color);
+            box-shadow: var(--neon-glow), 0 8px 24px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .album-cover.neon-border::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: conic-gradient(from 0deg, var(--neon-color), transparent, var(--neon-color), transparent, var(--neon-color));
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0.4;
+            animation: albumNeonRotate 3s linear infinite;
+        }
+
+        .album-cover.neon-border:hover {
+            box-shadow: var(--neon-glow), 0 0 120px rgba(29, 185, 84, 0.5), 0 12px 32px rgba(0, 0, 0, 0.6);
+            transform: scale(1.05);
+        }
+
+        @keyframes albumNeonRotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .track-info {
@@ -557,21 +843,210 @@
 
         .volume-container {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 12px;
-            margin-top: 32px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
         }
 
-        .volume-container:hover {
-            background: rgba(255, 255, 255, 0.1);
+        /* Estado escondido do container */
+        .volume-container.hidden {
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        /* Animação de transição */
+        .volume-container {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Ícone de toggle */
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .volume-toggle-btn.hidden .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Melhorias para o ícone do botão toggle */
+        .volume-toggle-btn .toggle-icon {
+            font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .volume-toggle-btn:hover .toggle-icon {
+            transform: scale(1.1);
+        }
+
+        .volume-toggle-btn.hidden .toggle-icon {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .volume-toggle-btn.hidden:hover .toggle-icon {
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        /* Animação de pulso para chamar atenção */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .volume-toggle-btn.hidden {
+            animation: pulse 2s infinite;
+        }
+
+        .volume-toggle-btn.hidden:hover {
+            animation: none;
+        }
+
+        /* Wrapper para volume controls */
+        .volume-wrapper {
+            position: relative;
+            margin-top: 32px;
+        }
+
+        .volume-toggle-btn {
+            background: linear-gradient(135deg, #1DB954, #1ed760);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+            flex-shrink: 0;
+        }
+
+        .volume-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(29, 185, 84, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .volume-toggle-btn.hidden {
+            background: linear-gradient(135deg, #04f799, #03fc24);
+            box-shadow: 0 4px 12px rgba(6, 114, 33, 0.3);
+        }
+
+        .volume-toggle-btn.hidden:hover {
+            box-shadow: 0 6px 16px rgba(44, 248, 3, 0.4);
+        }
+
+        .volume-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .volume-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .volume-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .volume-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 500;
+            min-width: 60px;
         }
 
         .volume-slider {
-            width: 120px;
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            transition: all 0.3s ease;
+            touch-action: none;
+            position: relative;
+        }
+
+        .volume-slider:hover {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #1DB954, #1ed760);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 6px 16px rgba(29, 185, 84, 0.4);
+        }
+
+        .volume-slider::-webkit-slider-track {
+            background: linear-gradient(90deg, rgba(29, 185, 84, 0.3), rgba(29, 185, 84, 0.1));
+            border-radius: 3px;
+        }
+
+        .volume-value {
+            color: #1DB954;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .balance-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(29, 185, 84, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(29, 185, 84, 0.2);
+        }
+
+        .balance-slider {
+            flex: 1;
             height: 4px;
             -webkit-appearance: none;
             appearance: none;
@@ -579,27 +1054,177 @@
             border-radius: 2px;
             outline: none;
             transition: all 0.3s ease;
-            touch-action: none;
         }
 
-        .volume-slider:hover {
-            height: 6px;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
+        .balance-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: #fff;
+            width: 14px;
+            height: 14px;
+            background: #1DB954;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(29, 185, 84, 0.3);
             transition: all 0.3s ease;
         }
 
-        .volume-slider::-webkit-slider-thumb:hover {
+        .balance-slider::-webkit-slider-thumb:hover {
             transform: scale(1.2);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .balance-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .volume-presets {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .volume-preset-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .volume-preset-btn:hover {
+            background: rgba(29, 185, 84, 0.2);
+            border-color: #1DB954;
+            color: #1DB954;
+            transform: translateY(-1px);
+        }
+
+        .volume-preset-btn.active {
+            background: #1DB954;
+            border-color: #1DB954;
+            color: #fff;
+        }
+
+        .playlists-section {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 24px;
+        }
+
+        .playlists-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .playlists-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .playlist-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .playlist-controls .upload-button {
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 20px;
+        }
+
+        .playlist-controls .upload-button span {
+            font-size: 14px;
+        }
+
+        .playlist-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .playlist-actions .upload-button {
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 20px;
+        }
+
+        .playlist-actions .upload-button span {
+            font-size: 14px;
+        }
+
+        .playlists-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .playlist-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playlist-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .playlist-card.active {
+            background: rgba(29, 185, 84, 0.2);
+            border-color: #1DB954;
+        }
+
+        .playlist-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin: 0 0 8px 0;
+        }
+
+        .playlist-card .music-count {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .playlist-selector {
+            margin-bottom: 16px;
+        }
+
+        .playlist-selector select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .playlist-selector select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .playlist {
@@ -823,6 +1448,15 @@
                 padding: 12px;
             }
 
+            .player-section.zoomed {
+                padding: 20px;
+            }
+
+            .player-section.zoomed .player-container {
+                transform: scale(1.05);
+                max-width: 100%;
+            }
+
             .player-container {
                 padding: 16px;
             }
@@ -965,6 +1599,12 @@
 
             .upload-button {
                 padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .volume-toggle-btn {
+                width: 20px;
+                height: 20px;
                 font-size: 12px;
             }
         }
@@ -1167,6 +1807,45 @@
             border-left: 4px solid #1DB954;
         }
 
+        /* Estilos para borda neon dinâmica */
+        .track-item.neon-border {
+            --neon-color: #1DB954;
+            --neon-glow: 0 0 20px rgba(29, 185, 84, 0.6), 0 0 40px rgba(29, 185, 84, 0.4), 0 0 60px rgba(29, 185, 84, 0.2);
+            border: 2px solid var(--neon-color);
+            box-shadow: var(--neon-glow);
+            position: relative;
+        }
+
+        .track-item.neon-border::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-color), transparent, var(--neon-color));
+            border-radius: 10px;
+            z-index: -1;
+            opacity: 0.3;
+            animation: neonPulse 2s ease-in-out infinite alternate;
+        }
+
+        .track-item.neon-border:hover {
+            box-shadow: var(--neon-glow), 0 0 80px rgba(29, 185, 84, 0.3);
+            transform: translateX(8px) scale(1.02);
+        }
+
+        @keyframes neonPulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0.6;
+                transform: scale(1.01);
+            }
+        }
+
         .material-symbols-rounded {
             font-variation-settings:
                 'FILL' 0,
@@ -1175,6 +1854,211 @@
                 'opsz' 24;
             vertical-align: middle;
         }
+
+        /* Estilos para os ícones de fone */
+        .headphone-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #1DB954, #1ed760);
+            border-radius: 50%;
+            color: #fff;
+            font-weight: bold;
+            font-size: 10px;
+            margin-right: 4px;
+            box-shadow: 0 2px 4px rgba(29, 185, 84, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .headphone-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(29, 185, 84, 0.4);
+        }
+
+        /* Melhorias para os controles de volume */
+        .volume-row:hover .volume-label {
+            color: #1DB954;
+        }
+
+        .volume-row:hover .volume-slider {
+            background: rgba(29, 185, 84, 0.2);
+        }
+
+        .balance-control:hover {
+            background: rgba(29, 185, 84, 0.15);
+            border-color: rgba(29, 185, 84, 0.3);
+        }
+
+        /* Container para volume value e botão toggle */
+        .volume-value-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        /* Animação para os valores de volume */
+        .volume-value {
+            transition: all 0.3s ease;
+        }
+
+        .volume-row:hover .volume-value {
+            transform: scale(1.1);
+            color: #1ed760;
+        }
+
+        /* Responsividade para os controles de volume */
+        @media (max-width: 768px) {
+            .volume-container {
+                padding: 16px;
+            }
+
+            .volume-controls {
+                gap: 12px;
+            }
+
+            .volume-row {
+                gap: 8px;
+            }
+
+            .volume-label {
+                min-width: 50px;
+                font-size: 11px;
+            }
+
+            .volume-value {
+                min-width: 30px;
+                font-size: 11px;
+            }
+
+            .volume-value-container {
+                gap: 4px;
+            }
+
+            .volume-presets {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .volume-preset-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+        }
+
+        /* Controles Avançados */
+        .volume-advanced-controls {
+            display: block;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .volume-container.hidden .volume-advanced-controls {
+            display: none;
+        }
+
+        /* Controle Simples */
+        .volume-simple-control {
+            display: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .volume-container.hidden .volume-simple-control {
+            display: block;
+        }
+
+        /* Esconde o botão simples quando controles avançados estão visíveis */
+        .volume-simple-control .volume-toggle-btn {
+            display: flex;
+        }
+
+        .volume-advanced-controls .volume-toggle-btn {
+            display: flex;
+        }
+
+        .simple-volume-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .simple-volume-row:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .simple-volume-row .material-symbols-rounded {
+            color: #1DB954;
+            font-size: 20px;
+        }
+
+        .simple-volume-row .volume-slider {
+            flex: 1;
+            height: 6px;
+        }
+
+        .simple-volume-row .volume-value {
+            color: #1DB954;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        /* Melhorias para o controle simples */
+        .volume-container.hidden {
+            max-height: none;
+            padding: 12px;
+            margin-top: 32px;
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+        }
+
+        .volume-container.hidden .volume-simple-control {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsividade para o controle simples */
+        @media (max-width: 768px) {
+            .simple-volume-row {
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .simple-volume-row .material-symbols-rounded {
+                font-size: 18px;
+            }
+
+            .simple-volume-row .volume-value {
+                font-size: 11px;
+                min-width: 30px;
+            }
+        }
+
+                    /* Ajustes para o botão toggle em mobile */
+            .volume-toggle-btn {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+            }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
@@ -1182,7 +2066,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Musickera</h1>
+            <h1>Musickêra</h1>
             <div class="search-container">
                 <select class="platform-selector" id="platformSelector">
                     <option value="Sua Juckebox">Juckebox</option>
@@ -1201,12 +2085,43 @@
                     </span>
                     <input type="text" placeholder="Buscar músicas ou playlists..." id="searchInput">
                 </div>
-                <button class="upload-button" id="importYtBtn" title="Importar playlist do YouTube Music">YouTube Music</button>
+                <button class="upload-button" id="importYtBtn" title="Importar playlist Youtube Music"><span class="material-symbols-rounded">
+                    youtube_activity
+                    </span></button>
                 <button class="upload-button" id="syncBtn" title="Forçar sincronização com a pasta musics">
-                    <span class="material-symbols-rounded">sync</span> Sincronizar
+                    <span class="material-symbols-rounded">sync</span> 
+                </button>
+                <button class="upload-button" id="loadAllBtn" title=" Barra de progresso">
+                    <span class="material-symbols-rounded">playlist_add_check_circle</span>
                 </button>
                 <div class="search-results" id="searchResults">
                     <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de Progresso de Download -->
+        <div id="downloadProgressBar" class="download-progress-container" style="display: none;">
+            <div class="download-progress-header">
+                <h3>📥 Carregando Playlists</h3>
+                <button id="closeProgressBar" class="close-progress-btn">×</button>
+            </div>
+            <div class="download-progress-content">
+                <div class="overall-progress">
+                    <div class="progress-label">Progresso Geral</div>
+                    <div class="progress-bar-container">
+                        <div id="overallProgressBar" class="progress-bar-fill"></div>
+                    </div>
+                    <div id="overallProgressText" class="progress-text">0%</div>
+                </div>
+                <div id="playlistProgressList" class="playlist-progress-list">
+                    <!-- Lista de progresso das playlists será inserida aqui -->
+                </div>
+            </div>
+            <div class="download-progress-footer">
+                <div id="downloadStatus" class="download-status">Iniciando carregamento...</div>
+                <div id="downloadStats" class="download-stats">
+                    <span id="processedFiles">0</span> / <span id="totalFiles">0</span> arquivos
                 </div>
             </div>
         </div>
@@ -1246,20 +2161,129 @@
                     <button class="control-button" onclick="toggleRepeat()" id="repeatButton" title="Repetir">
                         <span id="repeatIcon" class="material-symbols-rounded">repeat</span>
                     </button>
+                    <button class="control-button" onclick="toggleZoom()" id="zoomButton" title="Ampliar Player">
+                        <span id="zoomIcon" class="material-symbols-rounded">fullscreen</span>
+                    </button>
                 </div>
 
-                <div class="volume-container">
-                    <span class="material-symbols-rounded">volume_up</span>
-                    <input type="range" class="volume-slider" min="0" max="100" value="100">
+                <!-- Wrapper para volume controls -->
+                <div class="volume-wrapper">
+                    <div class="volume-container">
+                    <!-- Controles Avançados -->
+                    <div class="volume-advanced-controls">
+                        <div class="volume-header">
+                            <span class="material-symbols-rounded">volume_up</span>
+                            <span>Controles de Volume</span>
+                        </div>
+                        
+                        <div class="volume-controls">
+                            <!-- Volume Master -->
+                            <div class="volume-row">
+                                <div class="volume-label">
+                                    <span class="material-symbols-rounded">volume_up</span>
+                                    Master
+                                </div>
+                                <input type="range" class="volume-slider" id="masterVolume" min="0" max="100" value="100">
+                                <div class="volume-value-container">
+                                    <span class="volume-value" id="masterVolumeValue">100%</span>
+                                    <button class="volume-toggle-btn" id="volumeToggleBtn" title="Esconder/Mostrar Controles de Volume">
+                                        <span class="material-symbols-rounded toggle-icon">settings</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Volume Canal Esquerdo -->
+                            <div class="volume-row">
+                                <div class="volume-label">
+                                    <span class="material-symbols-rounded">headphones</span>
+                                    <span class="headphone-icon">D</span>
+                                </div>
+                                <input type="range" class="volume-slider" id="leftVolume" min="0" max="100" value="100">
+                                <span class="volume-value" id="leftVolumeValue">100%</span>
+                            </div>
+                            
+                            <!-- Volume Canal Direito -->
+                            <div class="volume-row">
+                                <div class="volume-label">
+                                    <span class="material-symbols-rounded">headphones</span>
+                                    <span class="headphone-icon">R</span>
+                                </div>
+                                <input type="range" class="volume-slider" id="rightVolume" min="0" max="100" value="100">
+                                <span class="volume-value" id="rightVolumeValue">100%</span>
+                            </div>
+                            
+                            <!-- Controle de Balance -->
+                            <div class="balance-control">
+                                <div class="balance-label">
+                                    <span class="material-symbols-rounded">balance</span>
+                                    Balance
+                                </div>
+                                <input type="range" class="balance-slider" id="balanceSlider" min="-100" max="100" value="0">
+                                <span class="volume-value" id="balanceValue">C</span>
+                            </div>
+                            
+                            <!-- Presets de Volume -->
+                            <div class="volume-presets">
+                                <button class="volume-preset-btn" onclick="setVolumePreset(25)">25%</button>
+                                <button class="volume-preset-btn" onclick="setVolumePreset(50)">50%</button>
+                                <button class="volume-preset-btn" onclick="setVolumePreset(75)">75%</button>
+                                <button class="volume-preset-btn" onclick="setVolumePreset(100)">100%</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Controle Simples (quando avançado está escondido) -->
+                    <div class="volume-simple-control">
+                        <div class="simple-volume-row">
+                            <span class="material-symbols-rounded">volume_up</span>
+                            <input type="range" class="volume-slider" id="simpleVolume" min="0" max="100" value="100">
+                            <div class="volume-value-container">
+                                <span class="volume-value" id="simpleVolumeValue">100%</span>
+                                <button class="volume-toggle-btn" id="volumeToggleBtnSimple" title="Esconder/Mostrar Controles de Volume">
+                                    <span class="material-symbols-rounded toggle-icon">tune</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="playlists-section">
+                <div class="playlists-header">
+                    <h3>Playlists</h3>
+                    <div class="playlist-controls">
+                        <button class="upload-button" onclick="showCreatePlaylistModal()">
+                            <span class="material-symbols-rounded">playlist_add</span>Nova
+                        </button>
+                        <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                            <span class="material-symbols-rounded">upload</span> Upload
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="playlists-list" id="playlistsList">
+                    <!-- Lista de playlists será preenchida dinamicamente -->
+                </div>
+                
+                <div class="playlist-selector">
+                    <select id="playlistSelector" onchange="loadPlaylist(this.value)">
+                        <option value="">Jukebox</option>
+                    </select>
                 </div>
             </div>
 
             <div class="playlist">
                 <div class="playlist-title">
-                    <h3>Playlist</h3>
-                    <button class="upload-button" onclick="document.getElementById('fileInput').click()">
-                        <span class="material-symbols-rounded">upload</span> Upload
-                    </button>
+                    <h3 id="currentPlaylistTitle">Todas as Músicas
+                    <div class="playlist-actions">
+                        <button class="upload-button" onclick="showUploadModal()">
+                            <span class="material-symbols-rounded">upload</span> Upload para Playlist
+                        </button>
+                        <button class="upload-button" onclick="debugPlaylist()" style="background: #ff6b6b;">
+                            <span class="material-symbols-rounded">bug_report</span> Verificar
+                        </button>
+                    </div>
                 </div>
                 <input type="file" id="fileInput" accept="audio/*" multiple onchange="handleFileUpload(event)" style="display: none;">
                 <ul class="track-list">
@@ -1275,12 +2299,12 @@
     <script>
         const playlist = [
             {
-                title: "Haverá Sinais",
-                artist: "Canção de Jorge & Mateus e Lauana Prado",
-                album: "Check-In",
+                title: "Titulo da Música",
+                artist: "Nome do Artista",
+                album: "Nome do Album",
                 duration: "3:45",
                 cover: "/",
-                file: "Haverá Sinais.mp3",
+                file: "musica.mp3",
                 trackNumber: 1
             },
             
@@ -1354,16 +2378,41 @@
             });
         }
 
-        // Função para carregar todas as músicas do banco de dados
+        // Função otimizada para carregar todas as músicas do banco de dados
         async function loadMusicsFromDB() {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(['musics'], 'readonly');
                 const store = transaction.objectStore('musics');
-                const request = store.getAll();
                 
-                request.onsuccess = () => {
-                    console.log('Músicas carregadas do banco de dados');
-                    resolve(request.result);
+                // Usa cursor para melhor performance com grandes volumes de dados
+                const request = store.openCursor();
+                const results = [];
+                
+                request.onsuccess = (event) => {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        // Carrega apenas campos essenciais para melhor performance
+                        const music = {
+                            id: cursor.value.id,
+                            title: cursor.value.title,
+                            artist: cursor.value.artist,
+                            album: cursor.value.album,
+                            cover: cursor.value.cover,
+                            duration: cursor.value.duration,
+                            fileName: cursor.value.fileName,
+                            fileType: cursor.value.fileType,
+                            file: cursor.value.file,
+                            source: cursor.value.source,
+                            deezerId: cursor.value.deezerId,
+                            youtubeId: cursor.value.youtubeId,
+                            year: cursor.value.year
+                        };
+                        results.push(music);
+                        cursor.continue();
+                    } else {
+                        console.log(`Músicas carregadas do banco de dados: ${results.length}`);
+                        resolve(results);
+                    }
                 };
                 
                 request.onerror = (event) => {
@@ -1428,6 +2477,29 @@
             });
         }
 
+        // Função para deletar uma música do banco de dados
+        async function deleteMusicFromDB(id) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const transaction = db.transaction(['musics'], 'readwrite');
+                    const store = transaction.objectStore('musics');
+                    const request = store.delete(id);
+                    
+                    request.onsuccess = () => {
+                        console.log('Música removida do banco de dados');
+                        resolve();
+                    };
+                    
+                    request.onerror = (event) => {
+                        console.error('Erro ao remover música do banco de dados:', event.target.error);
+                        reject(event.target.error);
+                    };
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
         // Atualiza/insere música no DB
         async function updateMusicInDB(music) {
             return new Promise((resolve, reject) => {
@@ -1440,8 +2512,85 @@
         }
 
         function arrayBufferToBlobUrl(arrayBuffer, mimeType) {
-            const blob = new Blob([arrayBuffer], { type: mimeType || 'audio/mpeg' });
-            return URL.createObjectURL(blob);
+            try {
+                if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+                    throw new Error('ArrayBuffer vazio ou inválido');
+                }
+                
+                const blob = new Blob([arrayBuffer], { type: mimeType || 'audio/mpeg' });
+                const url = URL.createObjectURL(blob);
+                
+                if (!url) {
+                    throw new Error('Falha ao criar URL do blob');
+                }
+                
+                return url;
+            } catch (error) {
+                console.error('Erro ao criar blob URL:', error);
+                throw error;
+            }
+        }
+
+        // Função para extrair cor dominante de uma imagem
+        function getDominantColor(imageUrl) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    
+                    let r = 0, g = 0, b = 0;
+                    let pixelCount = 0;
+                    
+                    // Amostra pixels para melhor performance
+                    for (let i = 0; i < data.length; i += 16) {
+                        r += data[i];
+                        g += data[i + 1];
+                        b += data[i + 2];
+                        pixelCount++;
+                    }
+                    
+                    r = Math.floor(r / pixelCount);
+                    g = Math.floor(g / pixelCount);
+                    b = Math.floor(b / pixelCount);
+                    
+                    resolve(`rgb(${r}, ${g}, ${b})`);
+                };
+                img.onerror = () => resolve('#1DB954'); // Cor padrão se falhar
+                img.src = imageUrl;
+            });
+        }
+
+        // Função para aplicar borda neon no card de música ou capa do álbum
+        async function applyNeonBorder(element, imageUrl) {
+            try {
+                const dominantColor = await getDominantColor(imageUrl);
+                const rgb = dominantColor.match(/\d+/g);
+                if (rgb && rgb.length >= 3) {
+                    const [r, g, b] = rgb;
+                    element.style.setProperty('--neon-color', dominantColor);
+                    
+                    // Diferentes efeitos para cards de música vs capa do álbum
+                    if (element.classList.contains('album-cover')) {
+                        // Efeito mais intenso para a capa do álbum
+                        element.style.setProperty('--neon-glow', `0 0 30px rgba(${r}, ${g}, ${b}, 0.8), 0 0 60px rgba(${r}, ${g}, ${b}, 0.6), 0 0 90px rgba(${r}, ${g}, ${b}, 0.4)`);
+                    } else {
+                        // Efeito mais sutil para os cards de música
+                        element.style.setProperty('--neon-glow', `0 0 20px rgba(${r}, ${g}, ${b}, 0.6), 0 0 40px rgba(${r}, ${g}, ${b}, 0.4), 0 0 60px rgba(${r}, ${g}, ${b}, 0.2)`);
+                    }
+                    
+                    element.classList.add('neon-border');
+                }
+            } catch (error) {
+                console.log('Erro ao aplicar borda neon:', error);
+            }
         }
 
         // Remove duplicados da playlist (e do IndexedDB quando aplicável)
@@ -1493,8 +2642,30 @@
             document.querySelector('.track-title').textContent = track.title;
             document.querySelector('.artist-name').textContent = track.artist;
             document.querySelector('.album-name').textContent = track.album;
-            document.querySelector('.album-cover').src = track.cover;
-            document.querySelector('.album-cover').alt = `${track.title} - ${track.artist}`;
+            
+            // Implementa cache de imagens de capa
+            const albumCover = document.querySelector('.album-cover');
+            if (albumCover && track.cover && track.cover !== 'musics/default-cover.jpg') {
+                // Verifica cache de imagem
+                const cachedCover = getCachedCover(track.fileName || track.title);
+                if (cachedCover) {
+                    albumCover.src = cachedCover;
+                    console.log('Usando capa do cache:', track.fileName || track.title);
+                } else {
+                    albumCover.src = track.cover;
+                    // Cache a imagem após carregar
+                    albumCover.onload = () => {
+                        setCachedCover(track.fileName || track.title, track.cover);
+                    };
+                }
+                
+                // Aplica borda neon na capa do álbum
+                applyNeonBorder(albumCover, track.cover);
+            } else if (albumCover) {
+                albumCover.src = track.cover || 'musics/default-cover.jpg';
+            }
+            
+            albumCover.alt = `${track.title} - ${track.artist}`;
             document.querySelector('.duration').textContent = track.duration;
             const yearEl = document.querySelector('.Ano');
             if (yearEl) yearEl.textContent = track.year ? `Ano: ${track.year}` : '';
@@ -1522,6 +2693,13 @@
 
         function loadTrack() {
             const track = playlist[currentTrack];
+            
+            console.log('Carregando faixa:', track);
+            
+            if (!track) {
+                console.error('Nenhuma faixa encontrada para reproduzir');
+                return;
+            }
             
             if (track.source === 'deezer') {
                 // Para músicas do Deezer, carrega o player incorporado
@@ -1568,14 +2746,78 @@
                 playerContainer.innerHTML = embedHtml;
             } else {
                 // Para músicas locais, usa o player padrão
-                audio.src = track.file;
-                audio.load();
-                updatePlayerInfo(track);
-                if (isPlaying) {
-                    audio.play().catch(error => {
-                        console.error('Erro ao reproduzir áudio:', error);
-                        alert('Erro ao reproduzir a música. Verifique se o arquivo existe e o formato é suportado (.mp3/.m4a/.webm).');
+                try {
+                    console.log('Processando música local:', {
+                        title: track.title,
+                        hasFile: !!track.file,
+                        hasFileArrayBuffer: !!track.fileArrayBuffer,
+                        fileType: track.fileType,
+                        fileName: track.fileName
                     });
+
+                    // Verifica se o arquivo existe
+                    if (!track.file && !track.fileArrayBuffer) {
+                        console.error('Arquivo de música não encontrado:', track);
+                        alert('Arquivo de música não encontrado. Tente recarregar a página.');
+                        return;
+                    }
+
+                    // Implementa lazy loading para Blob URLs
+                    if (!track.file && track.fileArrayBuffer) {
+                        try {
+                            // Verifica cache primeiro
+                            const cachedUrl = getCachedBlobUrl(track.fileName);
+                            if (cachedUrl) {
+                                track.file = cachedUrl;
+                                console.log('Usando Blob URL do cache:', track.fileName);
+                            } else {
+                                console.log('Criando novo blob URL para:', track.fileName);
+                                const blob = new Blob([track.fileArrayBuffer], { 
+                                    type: track.fileType || 'audio/mpeg' 
+                                });
+                                track.file = URL.createObjectURL(blob);
+                                setCachedBlobUrl(track.fileName, track.file);
+                                console.log('Blob URL criado e cacheado:', track.file);
+                            }
+                        } catch (e) {
+                            console.error('Falha ao criar URL do blob para a faixa:', e);
+                            alert('Erro ao processar o arquivo de música. Tente fazer upload novamente.');
+                            return;
+                        }
+                    }
+
+                    // Verifica se o arquivo é um URL válido
+                    if (typeof track.file === 'string' && !track.file.startsWith('blob:') && !track.file.startsWith('http')) {
+                        console.error('URL do arquivo inválido:', track.file);
+                        alert('URL do arquivo inválido. Tente recarregar a página.');
+                        return;
+                    }
+
+                    console.log('Definindo src do áudio:', track.file);
+                    
+                    // Carrega o áudio
+                    audio.src = track.file;
+                    audio.load();
+                    
+                    // Atualiza as informações do player
+                    updatePlayerInfo(track);
+                    
+                    // Reproduz se estiver no estado de reprodução
+                    if (isPlaying) {
+                        console.log('Tentando reproduzir áudio...');
+                        audio.play().catch(error => {
+                            console.error('Erro ao reproduzir áudio:', error);
+                            console.error('Detalhes do erro:', {
+                                name: error.name,
+                                message: error.message,
+                                code: audio.error ? audio.error.code : 'N/A'
+                            });
+                            alert('Erro ao reproduzir a música. Verifique se o arquivo existe e o formato é suportado (.mp3/.m4a/.webm).');
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar faixa:', error);
+                    alert('Erro ao carregar a música. Verifique se o arquivo está correto.');
                 }
             }
         }
@@ -1743,28 +2985,41 @@
 
         // Atualiza a função updatePlaylistHTML para usar o valor atual da busca
         function updatePlaylistHTML() {
-            const trackList = document.querySelector('.track-list');
-            const clearButton = document.querySelector('.clear-playlist');
-            
-            // Atualiza a lista de músicas
-            trackList.innerHTML = playlist.map((track, index) => `
-                <li class="track-item ${index === currentTrack ? 'active' : ''}" 
-                    onclick="playTrack(${index})">
-                    <span class="track-number">${(index + 1).toString().padStart(2, '0')}</span>
-                    <img src="${track.cover || 'musics/default-cover.jpg'}" alt="capa" style="width:40px;height:40px;border-radius:6px;object-fit:cover;margin-right:8px;">
-                    <div class="track-info-small">
-                        <div class="track-title-small">${track.title}</div>
-                        <div class="artist-name-small">${track.artist}</div>
-                    </div>
-                    <span class="track-duration">${track.duration}</span>
-                    <button class="remove-track" onclick="event.stopPropagation(); removeTrack(${index})">×</button>
-                </li>
-            `).join('');
-            
-            // Mostra ou esconde o botão de limpar playlist
-            clearButton.style.display = playlist.length > 0 ? 'block' : 'none';
-            
-            adjustFontSize();
+            if (window.__renderScheduled) return;
+            window.__renderScheduled = true;
+            requestAnimationFrame(() => {
+                window.__renderScheduled = false;
+                const trackList = document.querySelector('.track-list');
+                const clearButton = document.querySelector('.clear-playlist');
+                
+                // Atualiza a lista de músicas
+                trackList.innerHTML = playlist.map((track, index) => `
+                    <li class="track-item ${index === currentTrack ? 'active' : ''}" 
+                        onclick="playTrack(${index})">
+                        <span class="track-number">${(index + 1).toString().padStart(2, '0')}</span>
+                        <img src="${track.cover || 'musics/default-cover.jpg'}" loading="lazy" alt="capa" style="width:40px;height:40px;border-radius:6px;object-fit:cover;margin-right:8px;">
+                        <div class="track-info-small">
+                            <div class="track-title-small">${track.title}</div>
+                            <div class="artist-name-small">${track.artist}</div>
+                        </div>
+                        <span class="track-duration">${track.duration}</span>
+                        <button class="remove-track" onclick="event.stopPropagation(); removeTrack(${index})">×</button>
+                    </li>
+                `).join('');
+                
+                // Mostra ou esconde o botão de limpar playlist
+                clearButton.style.display = playlist.length > 0 ? 'block' : 'none';
+                
+                // Aplica borda neon para cada card de música
+                playlist.forEach((track, index) => {
+                    const trackItem = trackList.children[index];
+                    if (trackItem && track.cover && track.cover !== 'musics/default-cover.jpg') {
+                        applyNeonBorder(trackItem, track.cover);
+                    }
+                });
+                
+                adjustFontSize();
+            });
         }
 
         // Função para formatar a duração da música
@@ -1827,7 +3082,7 @@
             });
 
             updatePlaylistHTML();
-            savePlaylist();
+            savePlaylistThrottled();
         }
 
         // Inicializa o player com as durações atualizadas
@@ -1867,12 +3122,119 @@
 
         audio.addEventListener('error', function(e) {
             console.error('Erro no áudio:', e);
-            alert('Erro ao carregar a música. Verifique se o arquivo existe.');
+            const errorCode = audio.error ? audio.error.code : 'unknown';
+            let errorMessage = 'Erro ao carregar a música.';
+            
+            switch(errorCode) {
+                case 1:
+                    errorMessage = 'Erro ao carregar a música. O arquivo pode estar corrompido.';
+                    break;
+                case 2:
+                    errorMessage = 'Erro de rede. Verifique sua conexão com a internet.';
+                    break;
+                case 3:
+                    errorMessage = 'Formato de arquivo não suportado. Use .mp3, .m4a ou .webm.';
+                    break;
+                case 4:
+                    errorMessage = 'Arquivo de música não encontrado.';
+                    break;
+                default:
+                    errorMessage = 'Erro ao carregar a música. Verifique se o arquivo existe.';
+            }
+            
+            alert(errorMessage);
         });
 
         audio.addEventListener('loadeddata', function() {
             console.log('Áudio carregado com sucesso');
         });
+
+        audio.addEventListener('loadstart', function() {
+            console.log('Iniciando carregamento do áudio');
+        });
+
+        audio.addEventListener('canplay', function() {
+            console.log('Áudio pronto para reprodução');
+        });
+
+        audio.addEventListener('canplaythrough', function() {
+            console.log('Áudio totalmente carregado');
+        });
+
+        // Função para verificar se um arquivo de áudio é válido
+        function validateAudioFile(file) {
+            const validTypes = [
+                'audio/mpeg',
+                'audio/mp3',
+                'audio/mp4',
+                'audio/m4a',
+                'audio/aac',
+                'audio/ogg',
+                'audio/opus',
+                'audio/wav',
+                'audio/flac',
+                'audio/webm'
+            ];
+            
+            const validExtensions = ['.mp3', '.m4a', '.aac', '.ogg', '.opus', '.wav', '.flac', '.webm'];
+            
+            // Verifica o tipo MIME
+            if (file.type && !validTypes.includes(file.type)) {
+                console.warn('Tipo MIME não suportado:', file.type);
+            }
+            
+            // Verifica a extensão do arquivo
+            const fileName = file.name || '';
+            const extension = fileName.toLowerCase().substring(fileName.lastIndexOf('.'));
+            if (!validExtensions.includes(extension)) {
+                console.warn('Extensão de arquivo não suportada:', extension);
+            }
+            
+            // Verifica o tamanho do arquivo (mínimo 1KB)
+            if (file.size < 1024) {
+                console.warn('Arquivo muito pequeno, pode estar corrompido:', file.size, 'bytes');
+            }
+            
+            return true; // Sempre retorna true, mas loga os avisos
+        }
+
+        // Função para testar se um arquivo de áudio pode ser reproduzido
+        function testAudioPlayability(blobUrl) {
+            return new Promise((resolve, reject) => {
+                const testAudio = new Audio();
+                let timeout;
+                
+                const cleanup = () => {
+                    clearTimeout(timeout);
+                    testAudio.removeEventListener('canplaythrough', onSuccess);
+                    testAudio.removeEventListener('error', onError);
+                    testAudio.src = '';
+                };
+                
+                const onSuccess = () => {
+                    cleanup();
+                    resolve(true);
+                };
+                
+                const onError = (error) => {
+                    cleanup();
+                    console.error('Teste de reprodução falhou:', error);
+                    reject(new Error('Arquivo não pode ser reproduzido'));
+                };
+                
+                testAudio.addEventListener('canplaythrough', onSuccess);
+                testAudio.addEventListener('error', onError);
+                
+                testAudio.src = blobUrl;
+                testAudio.load();
+                
+                // Timeout de 10 segundos
+                timeout = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Timeout ao testar reprodução'));
+                }, 10000);
+            });
+        }
 
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
@@ -1883,6 +3245,11 @@
         function togglePlay() {
             const track = playlist[currentTrack];
             
+            if (!track) {
+                console.error('Nenhuma faixa selecionada para reproduzir');
+                return;
+            }
+            
             if (track.source === 'deezer') {
                 // Para músicas do Deezer, recarrega o iframe com o novo estado de autoplay
                 loadTrack();
@@ -1890,17 +3257,34 @@
                 // For YouTube Music, recarrega o iframe com o novo estado de autoplay
                 loadTrack();
             } else {
-                if (isPlaying) {
-                    audio.pause();
-                    const icon = document.getElementById('playPauseIcon');
-                    if (icon) icon.textContent = 'play_arrow';
-                } else {
-                    audio.play().catch(error => {
-                        console.error('Erro ao reproduzir áudio:', error);
-                        alert('Erro ao reproduzir a música. Verifique se o arquivo existe.');
-                    });
-                    const icon = document.getElementById('playPauseIcon');
-                    if (icon) icon.textContent = 'pause';
+                try {
+                    if (isPlaying) {
+                        audio.pause();
+                        const icon = document.getElementById('playPauseIcon');
+                        if (icon) icon.textContent = 'play_arrow';
+                    } else {
+                        // Verifica se o áudio está pronto para reprodução
+                        if (audio.readyState < 2) {
+                            console.log('Áudio ainda não está pronto, aguardando...');
+                            audio.addEventListener('canplay', function playWhenReady() {
+                                audio.removeEventListener('canplay', playWhenReady);
+                                audio.play().catch(error => {
+                                    console.error('Erro ao reproduzir áudio:', error);
+                                    alert('Erro ao reproduzir a música. Verifique se o arquivo existe.');
+                                });
+                            });
+                        } else {
+                            audio.play().catch(error => {
+                                console.error('Erro ao reproduzir áudio:', error);
+                                alert('Erro ao reproduzir a música. Verifique se o arquivo existe.');
+                            });
+                        }
+                        const icon = document.getElementById('playPauseIcon');
+                        if (icon) icon.textContent = 'pause';
+                    }
+                } catch (error) {
+                    console.error('Erro ao controlar reprodução:', error);
+                    alert('Erro ao controlar a reprodução da música.');
                 }
             }
             isPlaying = !isPlaying;
@@ -2170,122 +3554,386 @@
             event.target.value = '';
         }
 
-        // Função para atualizar a lista de músicas do diretório
-        async function updateMusicList() {
+        // Variáveis para controle de performance
+        let lastCheckTime = 0;
+        let isUpdating = false;
+        let updateQueue = [];
+
+        // Sistema de cache para melhorar performance
+        const metadataCache = new Map();
+        const coverCache = new Map();
+        const blobUrlCache = new Map();
+        const processingCache = new Set();
+        
+        // Configurações de performance
+        const PERFORMANCE_CONFIG = {
+            batchSize: {
+                initial: 20,
+                playlist: 10,
+                changes: 5,
+                dynamic: true // Ajusta automaticamente baseado na performance
+            },
+            cache: {
+                maxSize: 1000,
+                ttl: 300000 // 5 minutos
+            },
+            lazy: {
+                enabled: true,
+                threshold: 50 // Carrega Blob URLs apenas quando necessário
+            }
+        };
+
+        // Funções de cache inteligente
+        function getCachedMetadata(fileName) {
+            const cached = metadataCache.get(fileName);
+            if (cached && Date.now() - cached.timestamp < PERFORMANCE_CONFIG.cache.ttl) {
+                return cached.data;
+            }
+            metadataCache.delete(fileName);
+            return null;
+        }
+
+        function setCachedMetadata(fileName, metadata) {
+            if (metadataCache.size >= PERFORMANCE_CONFIG.cache.maxSize) {
+                // Remove o item mais antigo
+                const oldestKey = metadataCache.keys().next().value;
+                metadataCache.delete(oldestKey);
+            }
+            metadataCache.set(fileName, {
+                data: metadata,
+                timestamp: Date.now()
+            });
+        }
+
+        function getCachedCover(fileName) {
+            const cached = coverCache.get(fileName);
+            if (cached && Date.now() - cached.timestamp < PERFORMANCE_CONFIG.cache.ttl) {
+                return cached.data;
+            }
+            coverCache.delete(fileName);
+            return null;
+        }
+
+        function setCachedCover(fileName, cover) {
+            if (coverCache.size >= PERFORMANCE_CONFIG.cache.maxSize) {
+                const oldestKey = coverCache.keys().next().value;
+                coverCache.delete(oldestKey);
+            }
+            coverCache.set(fileName, {
+                data: cover,
+                timestamp: Date.now()
+            });
+        }
+
+        function getCachedBlobUrl(fileName) {
+            return blobUrlCache.get(fileName);
+        }
+
+        function setCachedBlobUrl(fileName, blobUrl) {
+            if (blobUrlCache.size >= PERFORMANCE_CONFIG.cache.maxSize) {
+                const oldestKey = blobUrlCache.keys().next().value;
+                const oldUrl = blobUrlCache.get(oldestKey);
+                if (oldUrl) URL.revokeObjectURL(oldUrl);
+                blobUrlCache.delete(oldestKey);
+            }
+            blobUrlCache.set(fileName, blobUrl);
+        }
+
+        // Função para ajustar tamanho de lote dinamicamente
+        function getDynamicBatchSize(type, totalItems) {
+            const baseSize = PERFORMANCE_CONFIG.batchSize[type] || 10;
+            if (!PERFORMANCE_CONFIG.batchSize.dynamic) return baseSize;
+            
+            // Ajusta baseado no número total de itens
+            if (totalItems > 1000) return Math.max(5, baseSize / 2);
+            if (totalItems > 500) return Math.max(8, baseSize * 0.8);
+            if (totalItems < 50) return Math.min(20, baseSize * 1.5);
+            
+            return baseSize;
+        }
+
+        // Função para limpeza automática de cache
+        function cleanupCache() {
+            const now = Date.now();
+            
+            // Limpa cache de metadados expirados
+            for (const [key, value] of metadataCache.entries()) {
+                if (now - value.timestamp > PERFORMANCE_CONFIG.cache.ttl) {
+                    metadataCache.delete(key);
+                }
+            }
+            
+            // Limpa cache de capas expiradas
+            for (const [key, value] of coverCache.entries()) {
+                if (now - value.timestamp > PERFORMANCE_CONFIG.cache.ttl) {
+                    coverCache.delete(key);
+                }
+            }
+            
+            // Limpa cache de Blob URLs não utilizados
+            if (blobUrlCache.size > PERFORMANCE_CONFIG.cache.maxSize) {
+                const entries = Array.from(blobUrlCache.entries());
+                const toRemove = entries.slice(0, entries.length - PERFORMANCE_CONFIG.cache.maxSize);
+                toRemove.forEach(([key, url]) => {
+                    URL.revokeObjectURL(url);
+                    blobUrlCache.delete(key);
+                });
+            }
+            
+            console.log('🧹 Cache limpo automaticamente');
+        }
+
+        // Configura limpeza automática de cache a cada 5 minutos
+        setInterval(cleanupCache, 300000);
+
+        // Função otimizada para verificar mudanças
+        async function checkMusicChanges() {
+            if (isUpdating) return;
+            
             try {
-                console.log('Atualizando lista de músicas...');
-                const response = await fetch('http://localhost:5000/list_music');
-                console.log('Resposta do servidor:', response.status);
+                const url = currentPlaylist 
+                    ? `http://localhost:5000/check_music_changes?playlist=${encodeURIComponent(currentPlaylist)}&last_check=${lastCheckTime}`
+                    : `http://localhost:5000/check_music_changes?last_check=${lastCheckTime}`;
                 
+                const response = await fetch(url);
                 const data = await response.json();
-                console.log('Dados recebidos:', data);
                 
                 if (data.error) {
                     throw new Error(data.error);
                 }
 
-                // Conjunto de nomes de arquivo já presentes na playlist (via DB ou remoto)
-                const playlistFileNames = new Set(
-                    playlist
-                        .map(track => track.fileName || (typeof track.file === 'string' ? track.file.split('/').pop().split('?')[0] : undefined))
-                        .filter(Boolean)
-                );
+                if (data.changes && data.changes.length > 0) {
+                    console.log(`${data.changes.length} mudanças detectadas`);
+                    await processMusicChanges(data.changes);
+                }
+                
+                lastCheckTime = data.current_time || Date.now() / 1000;
+            } catch (error) {
+                console.error('Erro ao verificar mudanças:', error);
+            }
+        }
 
-                // Filtra somente músicas novas por nome do arquivo
-                const newMusic = data.music.filter(music => !playlistFileNames.has(music.name));
-
-                if (newMusic.length > 0) {
-                    console.log('Novas músicas encontradas:', newMusic);
-
-                    for (const music of newMusic) {
-                        try {
-                            // Verifica se já existe no IndexedDB
-                            const existing = await getMusicByFileName(music.name);
-                            if (existing) {
-                                // Atualiza metadados se estiverem desconhecidos e o backend trouxe dados
-                                const isUnknown = (v) => !v || /desconhecid/i.test(String(v));
-                                const updated = { ...existing };
-                                let changed = false;
-                                if (music.title && (isUnknown(existing.title))) { updated.title = music.title; changed = true; }
-                                if (music.artist && (isUnknown(existing.artist))) { updated.artist = music.artist; changed = true; }
-                                if (music.album && (isUnknown(existing.album))) { updated.album = music.album; changed = true; }
-                                if (music.year && isUnknown(existing.year)) { updated.year = String(music.year); changed = true; }
-                                if (music.cover && (isUnknown(existing.cover) || /default-cover\.jpg$/.test(existing.cover || ''))) { updated.cover = music.cover; changed = true; }
-                                if (changed) {
-                                    try { await updateMusicInDB(updated); } catch (e) { console.error('Falha ao atualizar DB:', e); }
-                                }
-                                const url = arrayBufferToBlobUrl(updated.file, updated.fileType);
-                                playlist.push({ ...updated, file: url });
-                                continue;
-                            }
-
-                            // Baixa o arquivo do servidor e salva no IndexedDB
-                            const fileUrl = `http://localhost:5000${music.path}`;
-                            const fileResp = await fetch(fileUrl);
-                            const mimeType = fileResp.headers.get('content-type') || 'audio/mpeg';
-                            const arrayBuffer = await fileResp.arrayBuffer();
-
-                            // Usa metadados do backend quando disponíveis
-                            const baseName = music.name.replace(/\.[^/.]+$/, "");
-                            let artist = (music.artist && music.artist.trim()) || "Artista Desconhecido";
-                            let album = (music.album && music.album.trim()) || "Álbum Desconhecido";
-                            let title = (music.title && music.title.trim()) || baseName;
-                            if (!music.title || !music.artist) {
-                                if (baseName.includes(" - ")) {
-                                    const parts = baseName.split(" - ");
-                                    if (parts.length >= 2) {
-                                        artist = artist === "Artista Desconhecido" ? parts[0].trim() : artist;
-                                        title = title === baseName ? parts[1].trim() : title;
-                                    }
-                                }
-                            }
-
-                            // Capa: prioriza a fornecida pelo backend
-                            let coverUrl = music.cover || "musics/default-cover.jpg";
-                            if (!music.cover) {
-                                try {
-                                    coverUrl = await fetchDeezerCover(title, artist) || coverUrl;
-                                } catch {}
-                            }
-
-                            const musicRecord = {
-                                title: title,
-                                artist: artist,
-                                album: album,
-                                duration: "0:00",
-                                cover: coverUrl,
-                                file: arrayBuffer,
-                                fileType: mimeType,
-                                fileName: music.name,
-                                trackNumber: playlist.length + 1,
-                                year: (music.year && String(music.year)) || ''
-                            };
-
-                            const id = await saveMusicToDB(musicRecord);
-                            musicRecord.id = id;
-
-                            const blobUrl = arrayBufferToBlobUrl(arrayBuffer, mimeType);
-                            playlist.push({ ...musicRecord, file: blobUrl });
-                        } catch (e) {
-                            console.error('Falha ao processar música nova:', music, e);
+        // Função para processar mudanças de forma otimizada
+        async function processMusicChanges(changes) {
+            if (isUpdating) {
+                updateQueue.push(...changes);
+                return;
+            }
+            
+            isUpdating = true;
+            
+            try {
+                // Agrupa mudanças por tipo
+                const newFiles = changes.filter(c => c.action === 'modified' && !playlist.some(track => track.fileName === c.name));
+                const deletedFiles = changes.filter(c => c.action === 'deleted');
+                
+                // Remove arquivos deletados
+                if (deletedFiles.length > 0) {
+                    for (const deleted of deletedFiles) {
+                        const index = playlist.findIndex(track => track.fileName === deleted.name);
+                        if (index !== -1) {
+                            playlist.splice(index, 1);
                         }
                     }
-
+                }
+                
+                // Processa novos arquivos em lotes
+                if (newFiles.length > 0) {
+                    await processNewFiles(newFiles);
+                }
+                
+                // Processa fila de atualizações pendentes
+                while (updateQueue.length > 0) {
+                    const queuedChanges = updateQueue.splice(0);
+                    await processMusicChanges(queuedChanges);
+                }
+                
+                // Atualiza interface apenas se houve mudanças
+                if (newFiles.length > 0 || deletedFiles.length > 0) {
                     await dedupePlaylistAndDB();
                     sortPlaylist();
                     updatePlaylistHTML();
                     updateDurations();
                 }
-            } catch (error) {
-                console.error('Erro ao atualizar lista de músicas:', error);
-                if (error.message && error.message.includes('Failed to fetch')) {
-                    console.error('Não foi possível conectar ao servidor. Verifique se o servidor está rodando.');
+                
+            } finally {
+                isUpdating = false;
+            }
+        }
+
+        // Função otimizada para processar novos arquivos
+        async function processNewFiles(newFiles) {
+            const batchSize = 5; // Processa 5 arquivos por vez
+            
+            for (let i = 0; i < newFiles.length; i += batchSize) {
+                const batch = newFiles.slice(i, i + batchSize);
+                const promises = batch.map(music => processSingleFile(music));
+                
+                await Promise.allSettled(promises);
+                
+                // Pequena pausa entre lotes para não travar a interface
+                if (i + batchSize < newFiles.length) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
                 }
             }
         }
 
-        // Atualiza a lista de músicas a cada 5 segundos
-        setInterval(updateMusicList, 5000);
+        // Função para processar um único arquivo
+        async function processSingleFile(music) {
+            try {
+                // Verifica se já existe no IndexedDB
+                const existing = await getMusicByFileName(music.name);
+                if (existing) {
+                    // Verifica se precisa atualizar metadados
+                    const needsUpdate = shouldUpdateMetadata(existing, music);
+                    if (needsUpdate) {
+                        const updated = { ...existing };
+                        updateMetadataFromServer(updated, music);
+                        await updateMusicInDB(updated);
+                    }
+                    
+                    const url = arrayBufferToBlobUrl(existing.file, existing.fileType);
+                    playlist.push({ ...existing, file: url });
+                    return;
+                }
+
+                // Baixa o arquivo apenas se não existe no DB
+                await downloadAndProcessFile(music);
+                
+            } catch (e) {
+                console.error('Falha ao processar arquivo:', music.name, e);
+            }
+        }
+
+        // Função para verificar se precisa atualizar metadados
+        function shouldUpdateMetadata(existing, serverData) {
+            const isUnknown = (v) => !v || /desconhecid/i.test(String(v));
+            return (
+                (serverData.title && isUnknown(existing.title)) ||
+                (serverData.artist && isUnknown(existing.artist)) ||
+                (serverData.album && isUnknown(existing.album)) ||
+                (serverData.year && isUnknown(existing.year)) ||
+                (serverData.cover && (isUnknown(existing.cover) || /default-cover\.jpg$/.test(existing.cover || '')))
+            );
+        }
+
+        // Função para atualizar metadados do servidor
+        function updateMetadataFromServer(existing, serverData) {
+            const isUnknown = (v) => !v || /desconhecid/i.test(String(v));
+            
+            if (serverData.title && isUnknown(existing.title)) {
+                existing.title = serverData.title;
+            }
+            if (serverData.artist && isUnknown(existing.artist)) {
+                existing.artist = serverData.artist;
+            }
+            if (serverData.album && isUnknown(existing.album)) {
+                existing.album = serverData.album;
+            }
+            if (serverData.year && isUnknown(existing.year)) {
+                existing.year = String(serverData.year);
+            }
+            if (serverData.cover && (isUnknown(existing.cover) || /default-cover\.jpg$/.test(existing.cover || ''))) {
+                existing.cover = serverData.cover;
+            }
+        }
+
+        // Função para baixar e processar arquivo
+        async function downloadAndProcessFile(music) {
+            // Primeiro, obtém metadados completos do servidor
+            const metadataUrl = currentPlaylist 
+                ? `http://localhost:5000/list_music?playlist=${encodeURIComponent(currentPlaylist)}&skip_metadata=false`
+                : 'http://localhost:5000/list_music?skip_metadata=false';
+            
+            const metadataResponse = await fetch(metadataUrl);
+            const metadataData = await metadataResponse.json();
+            const fullMetadata = metadataData.music.find(m => m.name === music.name);
+            
+            if (!fullMetadata) return;
+            
+            // Baixa o arquivo
+            const fileUrl = `http://localhost:5000${music.path}`;
+            const fileResp = await fetch(fileUrl);
+            const mimeType = fileResp.headers.get('content-type') || 'audio/mpeg';
+            const arrayBuffer = await fileResp.arrayBuffer();
+
+            // Usa metadados do servidor
+            const baseName = music.name.replace(/\.[^/.]+$/, "");
+            const artist = (fullMetadata.artist && fullMetadata.artist.trim()) || "Artista Desconhecido";
+            const album = (fullMetadata.album && fullMetadata.album.trim()) || "Álbum Desconhecido";
+            const title = (fullMetadata.title && fullMetadata.title.trim()) || baseName;
+            const coverUrl = fullMetadata.cover || "musics/default-cover.jpg";
+
+            const musicRecord = {
+                title: title,
+                artist: artist,
+                album: album,
+                duration: "0:00",
+                cover: coverUrl,
+                file: arrayBuffer,
+                fileType: mimeType,
+                fileName: music.name,
+                trackNumber: playlist.length + 1,
+                year: (fullMetadata.year && String(fullMetadata.year)) || '',
+                playlist: fullMetadata.playlist || 'Geral'
+            };
+
+            const id = await saveMusicToDB(musicRecord);
+            musicRecord.id = id;
+
+            const blobUrl = arrayBufferToBlobUrl(arrayBuffer, mimeType);
+            playlist.push({ ...musicRecord, file: blobUrl });
+        }
+
+        // Função para atualizar a lista de músicas (mantida para compatibilidade)
+        async function updateMusicList() {
+            console.log('🔄 [PRIORIDADE 4] Atualização manual solicitada');
+            await checkMusicChanges();
+        }
+        
+        // Função para carregar todas as playlists com barra de progresso
+        async function loadAllPlaylistsWithProgress() {
+            if (!downloadProgress.isActive || allPlaylists.length === 0) {
+                console.log('Barra de progresso não está ativa ou não há playlists');
+                return;
+            }
+            
+            console.log('🔄 [PRIORIDADE 4] Carregando todas as playlists com progresso...');
+            
+            // Carrega cada playlist sequencialmente
+            for (const playlist of allPlaylists) {
+                try {
+                    await loadPlaylist(playlist.name);
+                    // Pequena pausa entre playlists
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                } catch (error) {
+                    console.error(`Erro ao carregar playlist ${playlist.name}:`, error);
+                }
+            }
+            
+            console.log('✅ [PRIORIDADE 4] Todas as playlists carregadas');
+        }
+        
+        // Função para iniciar carregamento automático de todas as playlists
+        function startAutoLoadAllPlaylists() {
+            if (allPlaylists.length > 0) {
+                // Mostra a barra de progresso
+                showDownloadProgress();
+                updateProgressUI();
+                
+                // Configura callback para quando terminar
+                downloadProgress.onComplete = () => {
+                    console.log('🎉 Carregamento automático de todas as playlists concluído!');
+                    // Aqui você pode adicionar ações adicionais após o carregamento
+                };
+                
+                // Inicia o carregamento
+                loadAllPlaylistsWithProgress();
+            }
+        }
+
+        // Atualiza a lista de músicas a cada 10 segundos (reduzido de 5 para 10)
+        setInterval(checkMusicChanges, 10000);
 
         // Função para tocar uma música específica
         function playTrack(index) {
@@ -2322,8 +3970,39 @@
             }
         }
 
+        // Função para alternar zoom do player
+        function toggleZoom() {
+            const playerSection = document.querySelector('.player-section');
+            const zoomButton = document.getElementById('zoomButton');
+            const zoomIcon = document.getElementById('zoomIcon');
+            
+            if (playerSection.classList.contains('zoomed')) {
+                // Reduzir o player
+                playerSection.classList.remove('zoomed');
+                zoomIcon.textContent = 'fullscreen';
+                zoomButton.title = 'Ampliar Player';
+                document.body.style.overflow = 'auto';
+            } else {
+                // Ampliar o player
+                playerSection.classList.add('zoomed');
+                zoomIcon.textContent = 'fullscreen_exit';
+                zoomButton.title = 'Reduzir Player';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
         // Adiciona o evento de redimensionamento
         window.addEventListener('resize', adjustFontSize);
+
+        // Adiciona o evento para fechar zoom com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const playerSection = document.querySelector('.player-section');
+                if (playerSection && playerSection.classList.contains('zoomed')) {
+                    toggleZoom();
+                }
+            }
+        });
 
         // Função para salvar a playlist no localStorage
         function savePlaylist() {
@@ -2332,6 +4011,21 @@
                 file: track.file // Salva a URL do arquivo
             }));
             localStorage.setItem('musickeraPlaylist', JSON.stringify(playlistData));
+        }
+
+        // Salva a playlist com limitação de frequência para evitar excesso de gravações
+        let __saveScheduled = false;
+        function savePlaylistThrottled() {
+            if (__saveScheduled) return;
+            __saveScheduled = true;
+            setTimeout(() => {
+                __saveScheduled = false;
+                try {
+                    savePlaylist();
+                } catch (e) {
+                    console.error('Falha ao salvar playlist:', e);
+                }
+            }, 500);
         }
 
         // Função para carregar a playlist do localStorage
@@ -2418,18 +4112,60 @@
             }
         }
 
-        // Função para carregar a playlist do banco de dados ao iniciar
+        // Função otimizada para carregar a playlist do banco de dados ao iniciar
         async function loadPlaylistFromDB() {
             try {
+                console.log('🔄 [PRIORIDADE 1] Carregando playlist do banco de dados...');
                 const musics = await loadMusicsFromDB();
                 playlist.length = 0;
                 
-                for (const music of musics) {
-                    // Cria URL do blob para reprodução
-                    const blob = new Blob([music.file], { type: music.fileType });
-                    music.file = URL.createObjectURL(blob);
-                    playlist.push(music);
+                // Usa tamanho de lote dinâmico baseado na quantidade de músicas
+                const batchSize = getDynamicBatchSize('initial', musics.length);
+                console.log(`📊 Usando tamanho de lote dinâmico: ${batchSize} para ${musics.length} músicas`);
+                
+                for (let i = 0; i < musics.length; i += batchSize) {
+                    const batch = musics.slice(i, i + batchSize);
+                    
+                    // Processa o lote em paralelo para melhor performance
+                    const processedBatch = await Promise.allSettled(
+                        batch.map(async (music) => {
+                            // Verifica cache antes de processar
+                            const cachedMetadata = getCachedMetadata(music.fileName);
+                            if (cachedMetadata) {
+                                return { ...music, ...cachedMetadata };
+                            }
+                            
+                            // Adia a criação de Blob URL para o momento da reprodução
+                            music.fileArrayBuffer = music.file;
+                            delete music.file;
+                            
+                            // Cache os metadados para uso futuro
+                            setCachedMetadata(music.fileName, {
+                                title: music.title,
+                                artist: music.artist,
+                                album: music.album,
+                                cover: music.cover
+                            });
+                            
+                            return music;
+                        })
+                    );
+                    
+                    // Adiciona apenas os itens processados com sucesso
+                    processedBatch.forEach(result => {
+                        if (result.status === 'fulfilled') {
+                            playlist.push(result.value);
+                        }
+                    });
+                    
+                    // Pausa adaptativa baseada no tamanho do lote
+                    if (i + batchSize < musics.length) {
+                        const pauseTime = Math.max(5, batchSize * 0.5);
+                        await new Promise(resolve => setTimeout(resolve, pauseTime));
+                    }
                 }
+                
+                console.log(`✅ [PRIORIDADE 1] Carregadas ${playlist.length} músicas do banco de dados`);
                 
                 await dedupePlaylistAndDB();
                 updatePlaylistHTML();
@@ -2442,12 +4178,249 @@
             }
         }
 
-        // Inicializa o banco de dados e carrega a playlist
-        initDB().then(() => {
-            loadPlaylistFromDB();
-        }).catch(error => {
-            console.error('Erro ao inicializar banco de dados:', error);
-        });
+        // ===== SISTEMA DE INICIALIZAÇÃO COM HIERARQUIA DE PRIORIDADES =====
+        
+        // Função principal de inicialização que respeita a hierarquia
+        async function initializePlayerWithPriorities() {
+            console.log('🚀 Iniciando player com hierarquia de prioridades...');
+            
+            try {
+                // PRIORIDADE 1: Funções críticas (sequencial)
+                console.log('📋 Executando PRIORIDADE 1: Funções críticas');
+                await initDB();
+                await loadPlaylistFromDB();
+                
+                // PRIORIDADE 2: Funções importantes (paralelo)
+                console.log('📋 Executando PRIORIDADE 2: Funções importantes');
+                await Promise.all([
+                    loadPlaylists(),
+                    initialChangeCheck()
+                ]);
+                
+                // PRIORIDADE 3: Configuração de manutenção
+                console.log('📋 Configurando PRIORIDADE 3: Sistema de manutenção');
+                // Atualiza a lista de músicas a cada 10 segundos
+                setInterval(checkMusicChanges, 10000);
+                
+                console.log('✅ Player inicializado com sucesso!');
+                
+            } catch (error) {
+                console.error('❌ Erro na inicialização do player:', error);
+            }
+        }
+        
+        // Função para verificação inicial de mudanças
+        async function initialChangeCheck() {
+            try {
+                console.log('🔄 [PRIORIDADE 2] Verificando mudanças iniciais...');
+                await checkMusicChanges();
+                console.log('✅ [PRIORIDADE 2] Verificação inicial concluída');
+            } catch (error) {
+                console.error('❌ [PRIORIDADE 2] Erro na verificação inicial:', error);
+            }
+        }
+        
+        // ===== SISTEMA DE BARRA DE PROGRESSO DE DOWNLOAD =====
+        
+        // Variáveis para controle da barra de progresso
+        let downloadProgress = {
+            isActive: false,
+            totalPlaylists: 0,
+            processedPlaylists: 0,
+            totalFiles: 0,
+            processedFiles: 0,
+            playlists: new Map(), // Map para armazenar progresso de cada playlist
+            onComplete: null
+        };
+        
+        // Função para mostrar a barra de progresso
+        function showDownloadProgress() {
+            const progressBar = document.getElementById('downloadProgressBar');
+            progressBar.style.display = 'block';
+            downloadProgress.isActive = true;
+            
+            // Adiciona evento para fechar
+            document.getElementById('closeProgressBar').onclick = hideDownloadProgress;
+        }
+        
+        // Função para esconder a barra de progresso
+        function hideDownloadProgress() {
+            const progressBar = document.getElementById('downloadProgressBar');
+            progressBar.style.display = 'none';
+            downloadProgress.isActive = false;
+        }
+        
+        // Função para inicializar o progresso de download
+        function initDownloadProgress(playlists) {
+            downloadProgress.totalPlaylists = playlists.length;
+            downloadProgress.processedPlaylists = 0;
+            downloadProgress.totalFiles = 0;
+            downloadProgress.processedFiles = 0;
+            downloadProgress.playlists.clear();
+            
+            // Inicializa o progresso de cada playlist
+            playlists.forEach(playlist => {
+                downloadProgress.playlists.set(playlist.name, {
+                    name: playlist.name,
+                    status: 'pending',
+                    progress: 0,
+                    totalFiles: playlist.music_count || 0,
+                    processedFiles: 0,
+                    error: null
+                });
+                downloadProgress.totalFiles += playlist.music_count || 0;
+            });
+            
+            updateProgressUI();
+            showDownloadProgress();
+        }
+        
+        // Função para atualizar o progresso de uma playlist específica
+        function updatePlaylistProgress(playlistName, progress, status, processedFiles = null, error = null) {
+            const playlist = downloadProgress.playlists.get(playlistName);
+            if (playlist) {
+                playlist.progress = progress;
+                playlist.status = status;
+                if (processedFiles !== null) {
+                    playlist.processedFiles = processedFiles;
+                }
+                if (error) {
+                    playlist.error = error;
+                }
+                
+                updateProgressUI();
+            }
+        }
+        
+        // Função para atualizar a interface de progresso
+        function updateProgressUI() {
+            if (!downloadProgress.isActive) return;
+            
+            // Calcula progresso geral
+            const overallProgress = downloadProgress.totalPlaylists > 0 
+                ? (downloadProgress.processedPlaylists / downloadProgress.totalPlaylists) * 100 
+                : 0;
+            
+            // Atualiza barra de progresso geral
+            const overallBar = document.getElementById('overallProgressBar');
+            const overallText = document.getElementById('overallProgressText');
+            overallBar.style.width = `${overallProgress}%`;
+            overallText.textContent = `${Math.round(overallProgress)}%`;
+            
+            // Atualiza estatísticas
+            const processedFilesEl = document.getElementById('processedFiles');
+            const totalFilesEl = document.getElementById('totalFiles');
+            processedFilesEl.textContent = downloadProgress.processedFiles;
+            totalFilesEl.textContent = downloadProgress.totalFiles;
+            
+            // Atualiza lista de playlists
+            updatePlaylistProgressList();
+            
+            // Atualiza status
+            updateDownloadStatus();
+        }
+        
+        // Função para atualizar a lista de progresso das playlists
+        function updatePlaylistProgressList() {
+            const playlistList = document.getElementById('playlistProgressList');
+            playlistList.innerHTML = '';
+            
+            downloadProgress.playlists.forEach(playlist => {
+                const playlistItem = document.createElement('div');
+                playlistItem.className = `playlist-progress-item ${playlist.status}`;
+                
+                const statusText = getStatusText(playlist.status);
+                const progressPercent = Math.round(playlist.progress);
+                
+                playlistItem.innerHTML = `
+                    <div class="playlist-name">${playlist.name}</div>
+                    <div class="playlist-status">${statusText}</div>
+                    <div class="playlist-progress-bar">
+                        <div class="playlist-progress-fill" style="width: ${playlist.progress}%"></div>
+                    </div>
+                    <div class="playlist-progress-text">${playlist.processedFiles}/${playlist.totalFiles} arquivos (${progressPercent}%)</div>
+                `;
+                
+                playlistList.appendChild(playlistItem);
+            });
+        }
+        
+        // Função para obter texto de status
+        function getStatusText(status) {
+            switch (status) {
+                case 'pending': return '⏳ Aguardando...';
+                case 'processing': return '🔄 Processando...';
+                case 'completed': return '✅ Concluído';
+                case 'error': return '❌ Erro';
+                default: return '⏳ Aguardando...';
+            }
+        }
+        
+        // Função para atualizar status geral
+        function updateDownloadStatus() {
+            const statusEl = document.getElementById('downloadStatus');
+            
+            if (downloadProgress.processedPlaylists === downloadProgress.totalPlaylists) {
+                statusEl.textContent = '🎉 Carregamento concluído!';
+                statusEl.style.color = '#1DB954';
+                
+                // Auto-fecha após 3 segundos
+                setTimeout(() => {
+                    if (downloadProgress.isActive) {
+                        hideDownloadProgress();
+                        if (downloadProgress.onComplete) {
+                            downloadProgress.onComplete();
+                        }
+                    }
+                }, 3000);
+            } else if (downloadProgress.processedPlaylists > 0) {
+                statusEl.textContent = `🔄 Processando... ${downloadProgress.processedPlaylists}/${downloadProgress.totalPlaylists} playlists`;
+            } else {
+                statusEl.textContent = '⏳ Iniciando carregamento...';
+            }
+        }
+        
+        // Função para marcar playlist como concluída
+        function completePlaylist(playlistName) {
+            const playlist = downloadProgress.playlists.get(playlistName);
+            if (playlist) {
+                playlist.status = 'completed';
+                playlist.progress = 100;
+                playlist.processedFiles = playlist.totalFiles;
+                downloadProgress.processedPlaylists++;
+                downloadProgress.processedFiles += playlist.totalFiles;
+                
+                updateProgressUI();
+            }
+        }
+        
+        // Função para marcar playlist com erro
+        function errorPlaylist(playlistName, error) {
+            const playlist = downloadProgress.playlists.get(playlistName);
+            if (playlist) {
+                playlist.status = 'error';
+                playlist.error = error;
+                downloadProgress.processedPlaylists++;
+                
+                updateProgressUI();
+            }
+        }
+        
+        // Função para atualizar progresso de arquivos de uma playlist
+        function updatePlaylistFileProgress(playlistName, processedFiles) {
+            const playlist = downloadProgress.playlists.get(playlistName);
+            if (playlist) {
+                playlist.processedFiles = processedFiles;
+                playlist.progress = playlist.totalFiles > 0 
+                    ? (processedFiles / playlist.totalFiles) * 100 
+                    : 0;
+                
+                updateProgressUI();
+            }
+        }
+        
+        // Inicializa o player com hierarquia de prioridades
+        initializePlayerWithPriorities();
 
         const platformSelector = document.getElementById('platformSelector');
         const searchResults = document.getElementById('searchResults');
@@ -2616,17 +4589,84 @@
             }
         });
 
-        // Import YouTube Music playlist
+        // Import YouTube Music playlist with folder selection
         importYtBtn.addEventListener('click', async function() {
+            // Solicita a URL da playlist
             const url = prompt('Cole o link da playlist do YouTube Music ou vídeo único:');
             if (!url) return;
+            
             try {
                 importYtBtn.disabled = true;
+                
+                // Primeiro, extrai o nome da playlist
+                const extractResp = await fetch('http://localhost:5000/extract_playlist_name', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+                
+                const extractData = await extractResp.json().catch(() => ({}));
+                if (!extractResp.ok || extractData.error) {
+                    alert('Erro ao extrair informações da playlist: ' + (extractData.error || 'Erro desconhecido'));
+                    return;
+                }
+                
+                const extractedName = extractData.playlist_name;
+                
+                // Pergunta se quer usar o nome extraído ou escolher uma pasta existente
+                const useExtractedName = confirm(
+                    `Nome da playlist extraído: "${extractedName}"\n\n` +
+                    `Clique em "OK" para usar este nome e criar uma nova pasta.\n` +
+                    `Clique em "Cancelar" para escolher uma pasta existente.`
+                );
+                
+                let finalPlaylistName;
+                
+                if (useExtractedName) {
+                    // Usa o nome extraído
+                    finalPlaylistName = extractedName;
+                } else {
+                    // Lista as pastas existentes para escolha
+                    const existingPlaylists = await getExistingPlaylists();
+                    
+                    if (existingPlaylists.length === 0) {
+                        alert('Nenhuma pasta existente encontrada. Usando o nome extraído da playlist.');
+                        finalPlaylistName = extractedName;
+                    } else {
+                        const playlistList = existingPlaylists.map((name, index) => `${index + 1}. ${name}`).join('\n');
+                        const choice = prompt(
+                            `Escolha uma pasta existente (digite o número) ou deixe vazio para usar "${extractedName}":\n\n${playlistList}`
+                        );
+                        
+                        if (choice && !isNaN(choice) && choice > 0 && choice <= existingPlaylists.length) {
+                            finalPlaylistName = existingPlaylists[choice - 1];
+                        } else {
+                            finalPlaylistName = extractedName;
+                        }
+                    }
+                }
+                
+                // Confirma o download
+                const confirmDownload = confirm(
+                    `Download será feito para a pasta: "${finalPlaylistName}"\n\n` +
+                    `Clique em "OK" para continuar.`
+                );
+                
+                if (!confirmDownload) {
+                    return;
+                }
+                
+                // Faz o download
                 const resp = await fetch('http://localhost:5000/download_playlist', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url, background: true })
+                    body: JSON.stringify({ 
+                        url, 
+                        background: true,
+                        playlist: finalPlaylistName
+                    })
                 });
+                
                 const data = await resp.json().catch(() => ({}));
                 if (resp.status === 202) {
                     alert('Download iniciado em segundo plano. As músicas aparecerão na playlist ao finalizar.');
@@ -2643,6 +4683,21 @@
                 importYtBtn.disabled = false;
             }
         });
+        
+        // Função para obter as playlists existentes
+        async function getExistingPlaylists() {
+            try {
+                const resp = await fetch('http://localhost:5000/list_playlists');
+                const data = await resp.json().catch(() => ({}));
+                if (resp.ok && data.playlists) {
+                    return data.playlists.map(p => p.name);
+                }
+                return [];
+            } catch (err) {
+                console.error('Erro ao obter playlists:', err);
+                return [];
+            }
+        }
 
         // Botão de sincronização manual com a pasta musics
         const syncBtn = document.getElementById('syncBtn');
@@ -2662,6 +4717,1209 @@
                     syncBtn.innerHTML = originalHtml;
                 }
             });
+        }
+        
+        // Botão para carregar todas as playlists com barra de progresso
+        const loadAllBtn = document.getElementById('loadAllBtn');
+        if (loadAllBtn) {
+            loadAllBtn.addEventListener('click', function() {
+                if (allPlaylists.length === 0) {
+                    alert('Nenhuma playlist encontrada. Aguarde o carregamento inicial.');
+                    return;
+                }
+                
+                if (downloadProgress.isActive) {
+                    alert('Carregamento já está em andamento. Aguarde a conclusão.');
+                    return;
+                }
+                
+                // Inicia o carregamento automático
+                startAutoLoadAllPlaylists();
+            });
+        }
+
+        // ===== CONTROLES DE VOLUME INDIVIDUAL =====
+        
+        // Variáveis para controle de volume
+        let masterVolume = 100;
+        let leftVolume = 100;
+        let rightVolume = 100;
+        let balance = 0;
+
+        // Função para criar um AudioContext para controle de canais
+        let audioContext;
+        let gainNode;
+        let splitter;
+        let leftGain;
+        let rightGain;
+
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                gainNode = audioContext.createGain();
+                splitter = audioContext.createChannelSplitter(2);
+                leftGain = audioContext.createGain();
+                rightGain = audioContext.createGain();
+                
+                // Conecta os nós
+                gainNode.connect(splitter);
+                splitter.connect(leftGain, 0);
+                splitter.connect(rightGain, 1);
+                leftGain.connect(audioContext.destination, 0);
+                rightGain.connect(audioContext.destination, 1);
+            }
+        }
+
+        // Função para aplicar volume master
+        function updateMasterVolume(value) {
+            masterVolume = value;
+            if (gainNode) {
+                gainNode.gain.value = value / 100;
+            }
+            document.getElementById('masterVolumeValue').textContent = value + '%';
+            
+            // Atualiza os presets
+            updateVolumePresetButtons();
+        }
+
+        // Função para aplicar volume do canal esquerdo
+        function updateLeftVolume(value) {
+            leftVolume = value;
+            if (leftGain) {
+                leftGain.gain.value = (value / 100) * (masterVolume / 100);
+            }
+            document.getElementById('leftVolumeValue').textContent = value + '%';
+        }
+
+        // Função para aplicar volume do canal direito
+        function updateRightVolume(value) {
+            rightVolume = value;
+            if (rightGain) {
+                rightGain.gain.value = (value / 100) * (masterVolume / 100);
+            }
+            document.getElementById('rightVolumeValue').textContent = value + '%';
+        }
+
+        // Função para aplicar balance
+        function updateBalance(value) {
+            balance = value;
+            let balanceText = 'C';
+            if (value < 0) {
+                balanceText = 'D';
+            } else if (value > 0) {
+                balanceText = 'R';
+            }
+            document.getElementById('balanceValue').textContent = balanceText;
+            
+            // Aplica o balance nos canais
+            if (leftGain && rightGain) {
+                const leftFactor = value <= 0 ? 1 : Math.max(0, 1 - (value / 100));
+                const rightFactor = value >= 0 ? 1 : Math.max(0, 1 + (value / 100));
+                
+                leftGain.gain.value = (leftVolume / 100) * (masterVolume / 100) * leftFactor;
+                rightGain.gain.value = (rightVolume / 100) * (masterVolume / 100) * rightFactor;
+            }
+        }
+
+        // Função para definir presets de volume
+        function setVolumePreset(volume) {
+            masterVolume = volume;
+            leftVolume = volume;
+            rightVolume = volume;
+            balance = 0;
+            
+            // Atualiza os sliders
+            document.getElementById('masterVolume').value = volume;
+            document.getElementById('leftVolume').value = volume;
+            document.getElementById('rightVolume').value = volume;
+            document.getElementById('balanceSlider').value = 0;
+            
+            // Atualiza o controle simples também
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            if (simpleVolumeSlider) {
+                simpleVolumeSlider.value = volume;
+            }
+            
+            // Aplica os volumes
+            updateMasterVolume(volume);
+            updateLeftVolume(volume);
+            updateRightVolume(volume);
+            updateBalance(0);
+            
+            // Atualiza os presets
+            updateVolumePresetButtons();
+        }
+
+        // Função para atualizar os botões de preset
+        function updateVolumePresetButtons() {
+            const presetButtons = document.querySelectorAll('.volume-preset-btn');
+            presetButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === masterVolume) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Função para aplicar volume ao áudio
+        function applyVolumeToAudio() {
+            if (!audioContext) {
+                initAudioContext();
+            }
+            
+            // Cria uma fonte de áudio a partir do elemento audio
+            const audioElement = document.getElementById('playerAudio');
+            if (audioElement && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            // Aplica os volumes atuais
+            updateMasterVolume(masterVolume);
+            updateLeftVolume(leftVolume);
+            updateRightVolume(rightVolume);
+            updateBalance(balance);
+        }
+
+        // Event listeners para os controles de volume
+        document.addEventListener('DOMContentLoaded', function() {
+            // Master Volume
+            const masterSlider = document.getElementById('masterVolume');
+            if (masterSlider) {
+                masterSlider.addEventListener('input', function() {
+                    updateMasterVolume(parseInt(this.value));
+                });
+            }
+
+            // Left Channel Volume
+            const leftSlider = document.getElementById('leftVolume');
+            if (leftSlider) {
+                leftSlider.addEventListener('input', function() {
+                    updateLeftVolume(parseInt(this.value));
+                });
+            }
+
+            // Right Channel Volume
+            const rightSlider = document.getElementById('rightVolume');
+            if (rightSlider) {
+                rightSlider.addEventListener('input', function() {
+                    updateRightVolume(parseInt(this.value));
+                });
+            }
+
+            // Balance Slider
+            const balanceSlider = document.getElementById('balanceSlider');
+            if (balanceSlider) {
+                balanceSlider.addEventListener('input', function() {
+                    updateBalance(parseInt(this.value));
+                });
+            }
+
+            // Inicializa o contexto de áudio quando o usuário interagir
+            document.addEventListener('click', function() {
+                if (!audioContext) {
+                    initAudioContext();
+                }
+            }, { once: true });
+        });
+
+        // Função para testar os canais
+        function testChannels() {
+            if (!audioContext) {
+                initAudioContext();
+            }
+            
+            // Toca um tom de teste em cada canal
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        // Adiciona botão de teste (opcional)
+        function addTestButton() {
+            const testBtn = document.createElement('button');
+            testBtn.className = 'volume-preset-btn';
+            testBtn.textContent = 'Test';
+            testBtn.onclick = testChannels;
+            testBtn.style.marginTop = '8px';
+            
+            const presetsContainer = document.querySelector('.volume-presets');
+            if (presetsContainer) {
+                presetsContainer.appendChild(testBtn);
+            }
+        }
+
+        // Inicializa os controles quando a página carregar
+        window.addEventListener('load', function() {
+            addTestButton();
+            updateVolumePresetButtons();
+        });
+
+        // ===== CONTROLE DE VISIBILIDADE DOS CONTROLES DE VOLUME =====
+        
+        let volumeControlsVisible = localStorage.getItem('volumeControlsVisible') !== 'false';
+        
+        // Se não há estado salvo, define como visível por padrão
+        if (localStorage.getItem('volumeControlsVisible') === null) {
+            localStorage.setItem('volumeControlsVisible', 'true');
+        }
+
+        // Função para alternar a visibilidade dos controles de volume
+        function toggleVolumeControls() {
+            const volumeContainer = document.querySelector('.volume-container');
+            const toggleBtn = document.getElementById('volumeToggleBtn');
+            const toggleBtnSimple = document.getElementById('volumeToggleBtnSimple');
+            
+            // Verifica se os elementos existem
+            if (!volumeContainer || !toggleBtn || !toggleBtnSimple) {
+                console.warn('Elementos de controle de volume não encontrados');
+                return;
+            }
+            
+            volumeControlsVisible = !volumeControlsVisible;
+            
+            if (volumeControlsVisible) {
+                // Mostra os controles avançados
+                if (volumeContainer) {
+                    volumeContainer.classList.remove('hidden');
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('hidden');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleIcon) {
+                        toggleIcon.textContent = 'settings';
+                    }
+                    toggleBtn.title = 'Esconder Controles de Volume';
+                }
+                
+                // Atualiza o botão simples
+                if (toggleBtnSimple) {
+                    const toggleIconSimple = toggleBtnSimple.querySelector('.toggle-icon');
+                    if (toggleIconSimple) {
+                        toggleIconSimple.textContent = 'settings';
+                    }
+                    toggleBtnSimple.title = 'Esconder Controles de Volume';
+                }
+                
+                // Salva o estado no localStorage
+                localStorage.setItem('volumeControlsVisible', 'true');
+            } else {
+                // Esconde os controles avançados (mostra o simples)
+                if (volumeContainer) {
+                    volumeContainer.classList.add('hidden');
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.classList.add('hidden');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleIcon) {
+                        toggleIcon.textContent = 'tune';
+                    }
+                    toggleBtn.title = 'Mostrar Controles de Volume';
+                }
+                
+                // Atualiza o botão simples
+                if (toggleBtnSimple) {
+                    const toggleIconSimple = toggleBtnSimple.querySelector('.toggle-icon');
+                    if (toggleIconSimple) {
+                        toggleIconSimple.textContent = 'tune';
+                    }
+                    toggleBtnSimple.title = 'Mostrar Controles de Volume';
+                }
+                
+                // Salva o estado no localStorage
+                localStorage.setItem('volumeControlsVisible', 'false');
+            }
+        }
+
+        // Função para restaurar o estado dos controles de volume
+        function restoreVolumeControlsState() {
+            const volumeContainer = document.querySelector('.volume-container');
+            const toggleBtn = document.getElementById('volumeToggleBtn');
+            const toggleBtnSimple = document.getElementById('volumeToggleBtnSimple');
+            
+            // Verifica se os elementos existem
+            if (!volumeContainer || !toggleBtn || !toggleBtnSimple) {
+                console.warn('Elementos de controle de volume não encontrados na restauração');
+                return;
+            }
+            
+            if (!volumeControlsVisible) {
+                // Se deve estar escondido
+                if (volumeContainer) {
+                    volumeContainer.classList.add('hidden');
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.classList.add('hidden');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleIcon) {
+                        toggleIcon.textContent = 'tune';
+                    }
+                    toggleBtn.title = 'Mostrar Controles de Volume';
+                }
+                
+                if (toggleBtnSimple) {
+                    const toggleIconSimple = toggleBtnSimple.querySelector('.toggle-icon');
+                    if (toggleIconSimple) {
+                        toggleIconSimple.textContent = 'tune';
+                    }
+                    toggleBtnSimple.title = 'Mostrar Controles de Volume';
+                }
+            } else {
+                // Se deve estar visível
+                if (volumeContainer) {
+                    volumeContainer.classList.remove('hidden');
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('hidden');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleIcon) {
+                        toggleIcon.textContent = 'settings';
+                    }
+                    toggleBtn.title = 'Esconder Controles de Volume';
+                }
+                
+                if (toggleBtnSimple) {
+                    const toggleIconSimple = toggleBtnSimple.querySelector('.toggle-icon');
+                    if (toggleIconSimple) {
+                        toggleIconSimple.textContent = 'settings';
+                    }
+                    toggleBtnSimple.title = 'Esconder Controles de Volume';
+                }
+            }
+        }
+
+        // Função para sincronizar volume simples com volume master
+        function syncSimpleVolume() {
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            const simpleVolumeValue = document.getElementById('simpleVolumeValue');
+            const masterVolumeSlider = document.getElementById('masterVolume');
+            
+            if (simpleVolumeSlider && masterVolumeSlider && simpleVolumeValue) {
+                const masterValue = masterVolumeSlider.value;
+                simpleVolumeSlider.value = masterValue;
+                simpleVolumeValue.textContent = masterValue + '%';
+            } else {
+                console.warn('Elementos de volume não encontrados para sincronização');
+            }
+        }
+
+        // Função para aplicar volume simples
+        function updateSimpleVolume(value) {
+            // Atualiza o volume master também
+            if (typeof updateMasterVolume === 'function') {
+                updateMasterVolume(value);
+            }
+            
+            // Atualiza o slider e valor do controle simples
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            const simpleVolumeValue = document.getElementById('simpleVolumeValue');
+            
+            if (simpleVolumeSlider && simpleVolumeValue) {
+                simpleVolumeSlider.value = value;
+                simpleVolumeValue.textContent = value + '%';
+            } else {
+                console.warn('Elementos de volume simples não encontrados');
+            }
+        }
+
+        // Event listener para o botão toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('volumeToggleBtn');
+            const toggleBtnSimple = document.getElementById('volumeToggleBtnSimple');
+            
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleVolumeControls);
+            } else {
+                console.warn('Botão de toggle de volume não encontrado');
+            }
+            
+            if (toggleBtnSimple) {
+                toggleBtnSimple.addEventListener('click', toggleVolumeControls);
+            } else {
+                console.warn('Botão de toggle de volume simples não encontrado');
+            }
+            
+            // Event listeners para os controles de volume
+            const masterVolumeSlider = document.getElementById('masterVolume');
+            const leftVolumeSlider = document.getElementById('leftVolume');
+            const rightVolumeSlider = document.getElementById('rightVolume');
+            const balanceSlider = document.getElementById('balanceSlider');
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            
+            if (masterVolumeSlider) {
+                masterVolumeSlider.addEventListener('input', function() {
+                    updateMasterVolume(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de volume master não encontrado');
+            }
+            
+            if (leftVolumeSlider) {
+                leftVolumeSlider.addEventListener('input', function() {
+                    updateLeftVolume(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de volume esquerdo não encontrado');
+            }
+            
+            if (rightVolumeSlider) {
+                rightVolumeSlider.addEventListener('input', function() {
+                    updateRightVolume(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de volume direito não encontrado');
+            }
+            
+            if (balanceSlider) {
+                balanceSlider.addEventListener('input', function() {
+                    updateBalance(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de balance não encontrado');
+            }
+            
+            if (simpleVolumeSlider) {
+                simpleVolumeSlider.addEventListener('input', function() {
+                    updateSimpleVolume(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de volume simples não encontrado');
+            }
+            
+            // Restaura o estado salvo
+            restoreVolumeControlsState();
+            
+            // Sincroniza o volume simples com o master
+            syncSimpleVolume();
+            
+            // Log do estado inicial para debug
+            console.log('Estado inicial dos controles de volume:', volumeControlsVisible ? 'visível' : 'escondido');
+        });
+
+        // Atalho de teclado para mostrar/esconder controles (Ctrl + V)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'v') {
+                e.preventDefault();
+                toggleVolumeControls();
+            }
+        });
+
+        // ===== FUNÇÕES DE GERENCIAMENTO DE PLAYLISTS =====
+
+        let currentPlaylist = '';
+        let allPlaylists = [];
+
+        // Função para carregar a lista de playlists
+        async function loadPlaylists() {
+            try {
+                console.log('🔄 [PRIORIDADE 2] Carregando lista de playlists...');
+                const response = await fetch('http://localhost:5000/list_playlists');
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                allPlaylists = data.playlists;
+                updatePlaylistsList();
+                updatePlaylistSelector();
+                
+                // Prepara a barra de progresso se houver playlists (não mostra automaticamente)
+                if (allPlaylists.length > 0) {
+                    // Inicializa sem mostrar
+                    downloadProgress.totalPlaylists = allPlaylists.length;
+                    downloadProgress.processedPlaylists = 0;
+                    downloadProgress.totalFiles = 0;
+                    downloadProgress.processedFiles = 0;
+                    downloadProgress.playlists.clear();
+                    
+                    // Inicializa o progresso de cada playlist
+                    allPlaylists.forEach(playlist => {
+                        downloadProgress.playlists.set(playlist.name, {
+                            name: playlist.name,
+                            status: 'pending',
+                            progress: 0,
+                            totalFiles: playlist.music_count || 0,
+                            processedFiles: 0,
+                            error: null
+                        });
+                        downloadProgress.totalFiles += playlist.music_count || 0;
+                    });
+                }
+                
+                console.log(`✅ [PRIORIDADE 2] Carregadas ${allPlaylists.length} playlists`);
+            } catch (error) {
+                console.error('❌ [PRIORIDADE 2] Erro ao carregar playlists:', error);
+            }
+        }
+
+        // Função para atualizar a lista de playlists na interface
+        function updatePlaylistsList() {
+            const playlistsList = document.getElementById('playlistsList');
+            if (!playlistsList) return;
+
+            playlistsList.innerHTML = '';
+
+            allPlaylists.forEach(playlist => {
+                const playlistCard = document.createElement('div');
+                playlistCard.className = `playlist-card ${playlist.name === currentPlaylist ? 'active' : ''}`;
+                playlistCard.onclick = () => loadPlaylist(playlist.name);
+                
+                playlistCard.innerHTML = `
+                    <h4>${playlist.name}</h4>
+                    <div class="music-count">${playlist.music_count} música${playlist.music_count !== 1 ? 's' : ''}</div>
+                `;
+                
+                playlistsList.appendChild(playlistCard);
+            });
+        }
+
+        // Função para atualizar o seletor de playlists
+        function updatePlaylistSelector() {
+            const playlistSelector = document.getElementById('playlistSelector');
+            if (!playlistSelector) return;
+
+            // Mantém a opção "Todas as músicas"
+            playlistSelector.innerHTML = '<option value="">Todas as músicas</option>';
+
+            allPlaylists.forEach(playlist => {
+                const option = document.createElement('option');
+                option.value = playlist.name;
+                option.textContent = `${playlist.name} (${playlist.music_count})`;
+                playlistSelector.appendChild(option);
+            });
+        }
+
+        // Função para carregar uma playlist específica
+        async function loadPlaylist(playlistName) {
+            console.log(`🔄 [PRIORIDADE 4] Carregando playlist: ${playlistName || 'Todas as músicas'}`);
+            currentPlaylist = playlistName;
+            
+            // Atualiza o título da playlist atual
+            const currentPlaylistTitle = document.getElementById('currentPlaylistTitle');
+            if (currentPlaylistTitle) {
+                currentPlaylistTitle.textContent = playlistName || 'Todas as músicas';
+            }
+
+            // Atualiza a interface das playlists
+            updatePlaylistsList();
+
+            // Se for uma playlist específica, atualiza o progresso
+            if (playlistName && downloadProgress.isActive) {
+                updatePlaylistProgress(playlistName, 0, 'processing');
+            }
+
+            // Carrega as músicas da playlist
+            try {
+                const url = playlistName 
+                    ? `http://localhost:5000/list_music?playlist=${encodeURIComponent(playlistName)}`
+                    : 'http://localhost:5000/list_music';
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Processa as músicas da playlist
+                await processPlaylistMusic(data.music, playlistName);
+                console.log(`✅ [PRIORIDADE 4] Playlist carregada: ${playlistName || 'Todas as músicas'}`);
+                
+                // Marca como concluída se estiver usando a barra de progresso
+                if (playlistName && downloadProgress.isActive) {
+                    completePlaylist(playlistName);
+                }
+                
+            } catch (error) {
+                console.error('❌ [PRIORIDADE 4] Erro ao carregar playlist:', error);
+                
+                // Marca como erro se estiver usando a barra de progresso
+                if (playlistName && downloadProgress.isActive) {
+                    errorPlaylist(playlistName, error.message);
+                }
+            }
+        }
+
+        // Função otimizada para processar músicas de uma playlist
+        async function processPlaylistMusic(musicList, playlistName = null) {
+            // Limpa a playlist atual
+            playlist.length = 0;
+            
+            // Mostra indicador de carregamento
+            const playlistContainer = document.querySelector('.playlist-container');
+            if (playlistContainer) {
+                playlistContainer.innerHTML = '<div class="loading-indicator">Carregando músicas...</div>';
+            }
+            
+            const batchSize = 10; // Processa 10 músicas por vez
+            const totalMusic = musicList.length;
+            let processedCount = 0;
+            
+            for (let i = 0; i < musicList.length; i += batchSize) {
+                const batch = musicList.slice(i, i + batchSize);
+                const promises = batch.map(music => processSingleMusicFile(music));
+                
+                // Processa o lote em paralelo
+                const results = await Promise.allSettled(promises);
+                
+                // Atualiza contador de progresso
+                processedCount += batch.length;
+                
+                // Atualiza indicador de carregamento local
+                if (playlistContainer) {
+                    playlistContainer.innerHTML = `<div class="loading-indicator">Carregando músicas... ${processedCount}/${totalMusic}</div>`;
+                }
+                
+                // Atualiza barra de progresso se estiver ativa
+                if (playlistName && downloadProgress.isActive) {
+                    updatePlaylistFileProgress(playlistName, processedCount);
+                }
+                
+                // Pequena pausa entre lotes para não travar a interface
+                if (i + batchSize < musicList.length) {
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+            }
+            
+            // Finaliza o carregamento
+            await dedupePlaylistAndDB();
+            sortPlaylist();
+            updatePlaylistHTML();
+            updateDurations();
+        }
+        
+        // Função para processar uma única música
+        async function processSingleMusicFile(music) {
+            try {
+                // Verifica se já existe no IndexedDB
+                const existing = await getMusicByFileName(music.name);
+                if (existing) {
+                    try {
+                        const url = arrayBufferToBlobUrl(existing.file, existing.fileType);
+                        playlist.push({ ...existing, file: url });
+                        return;
+                    } catch (e) {
+                        console.error('Erro ao criar URL para música existente:', e);
+                        // Remove a música corrompida do DB e baixa novamente
+                        await deleteMusicFromDB(existing.id);
+                    }
+                }
+
+                // Baixa o arquivo e salva no IndexedDB
+                const response = await fetch(`http://localhost:5000${music.path}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const arrayBuffer = await response.arrayBuffer();
+                
+                // Verifica se o arrayBuffer não está vazio
+                if (arrayBuffer.byteLength === 0) {
+                    throw new Error('Arquivo vazio recebido do servidor');
+                }
+                
+                const musicRecord = {
+                    title: music.title || 'Desconhecido',
+                    artist: music.artist || 'Desconhecido',
+                    album: music.album || 'Desconhecido',
+                    duration: "0:00",
+                    cover: music.cover || 'musics/default-cover.jpg',
+                    file: arrayBuffer,
+                    fileType: getMimeType(music.name),
+                    fileName: music.name,
+                    trackNumber: playlist.length + 1,
+                    playlist: music.playlist || 'Geral'
+                };
+
+                const id = await saveMusicToDB(musicRecord);
+                musicRecord.id = id;
+
+                try {
+                    const blobUrl = arrayBufferToBlobUrl(arrayBuffer, musicRecord.fileType);
+                    playlist.push({ ...musicRecord, file: blobUrl });
+                } catch (e) {
+                    console.error('Erro ao criar blob URL para:', music.name, e);
+                    // Remove do DB se não conseguir criar o blob
+                    await deleteMusicFromDB(id);
+                }
+            } catch (e) {
+                console.error('Falha ao processar música da playlist:', music.name, e);
+            }
+        }
+
+        // Função para criar uma nova playlist
+        async function createPlaylist(name) {
+            try {
+                const response = await fetch('http://localhost:5000/create_playlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Recarrega a lista de playlists
+                await loadPlaylists();
+                
+                return data;
+            } catch (error) {
+                console.error('Erro ao criar playlist:', error);
+                throw error;
+            }
+        }
+
+        // Função para mostrar modal de criação de playlist
+        function showCreatePlaylistModal() {
+            const name = prompt('Digite o nome da nova playlist:');
+            if (name && name.trim()) {
+                createPlaylist(name.trim())
+                    .then(() => alert('Playlist criada com sucesso!'))
+                    .catch(error => alert('Erro ao criar playlist: ' + error.message));
+            }
+        }
+
+        // Função para mostrar modal de upload para playlist
+        function showUploadModal() {
+            const playlistSelector = document.getElementById('playlistSelector');
+            const currentPlaylistName = currentPlaylist || 'Geral';
+            
+            const playlistName = prompt(
+                `Digite o nome da playlist para upload (atual: ${currentPlaylistName}):`,
+                currentPlaylistName
+            );
+            
+            if (playlistName) {
+                // Atualiza o input de arquivo para incluir a playlist
+                const fileInput = document.getElementById('fileInput');
+                fileInput.setAttribute('data-playlist', playlistName);
+                fileInput.click();
+            }
+        }
+
+        // Função para obter MIME type baseado na extensão
+        function getMimeType(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const mimeTypes = {
+                'mp3': 'audio/mpeg',
+                'm4a': 'audio/mp4',
+                'aac': 'audio/aac',
+                'ogg': 'audio/ogg',
+                'opus': 'audio/opus',
+                'wav': 'audio/wav',
+                'flac': 'audio/flac',
+                'webm': 'audio/webm'
+            };
+            return mimeTypes[ext] || 'audio/mpeg';
+        }
+
+        // Modifica a função handleFileUpload para suportar playlists
+        const originalHandleFileUpload = handleFileUpload;
+        handleFileUpload = async function(event) {
+            const files = event.target.files;
+            if (!files.length) return;
+
+            const playlistName = event.target.getAttribute('data-playlist') || 'Geral';
+            
+            for (const file of files) {
+                console.log('Processando arquivo:', file.name, file.type, file.size);
+                
+                if (!file.type.startsWith('audio/')) {
+                    console.warn('Arquivo não é de áudio:', file.name, file.type);
+                    continue;
+                }
+
+                // Valida o arquivo antes de processar
+                validateAudioFile(file);
+
+                try {
+                    // Lê os metadados ID3
+                    let title = "";
+                    let artist = "";
+                    let album = "";
+                    let cover = "";
+
+                    await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const arrayBuffer = e.target.result;
+                            const blob = new Blob([arrayBuffer], { type: file.type });
+                            
+                            // Tenta extrair metadados usando jsmediatags
+                            if (typeof jsmediatags !== 'undefined') {
+                                jsmediatags.read(blob, {
+                                    onSuccess: function(tag) {
+                                        title = tag.tags.title || "";
+                                        artist = tag.tags.artist || "";
+                                        album = tag.tags.album || "";
+                                        resolve();
+                                    },
+                                    onError: function(error) {
+                                        console.log('Erro ao ler metadados:', error);
+                                        resolve();
+                                    }
+                                });
+                            } else {
+                                resolve();
+                            }
+                        };
+                        reader.readAsArrayBuffer(file);
+                    });
+
+                    // Se não conseguiu extrair metadados, tenta buscar no Deezer
+                    if (!title || !artist) {
+                        cover = await fetchDeezerCover(title, artist);
+                    }
+
+                    // Cria o objeto da música
+                    const arrayBuffer = await file.arrayBuffer();
+                    console.log('ArrayBuffer criado, tamanho:', arrayBuffer.byteLength);
+                    
+                    const music = {
+                        title: title || "Desconhecido",
+                        artist: artist || "Desconhecido",
+                        album: album || "Desconhecido",
+                        duration: "0:00",
+                        cover: cover,
+                        file: arrayBuffer,
+                        fileType: file.type,
+                        fileName: file.name,
+                        trackNumber: playlist.length + 1,
+                        playlist: playlistName
+                    };
+
+                    // Salva no banco de dados
+                    const id = await saveMusicToDB(music);
+                    music.id = id;
+
+                    // Cria URL do blob para reprodução
+                    try {
+                        const blob = new Blob([arrayBuffer], { type: file.type });
+                        music.file = URL.createObjectURL(blob);
+                        console.log('Blob URL criado para upload:', music.file);
+                    } catch (blobError) {
+                        console.error('Erro ao criar blob URL:', blobError);
+                        throw new Error('Falha ao processar o arquivo de áudio');
+                    }
+
+                    // Adiciona à playlist
+                    playlist.push(music);
+
+                    // Atualiza a duração
+                    const audio = new Audio(music.file);
+                    audio.addEventListener('loadedmetadata', () => {
+                        const minutes = Math.floor(audio.duration / 60);
+                        const seconds = Math.floor(audio.duration % 60);
+                        music.duration = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        sortPlaylist();
+                        updatePlaylistHTML();
+                    });
+
+                    audio.addEventListener('error', (e) => {
+                        console.error('Erro ao carregar áudio do upload:', e);
+                        console.error('Detalhes do erro:', audio.error);
+                    });
+
+                    if (playlist.length === 1) {
+                        currentTrack = 0;
+                        loadTrack();
+                    }
+                } catch (error) {
+                    console.error('Erro ao processar arquivo:', error);
+                    alert(`Erro ao processar o arquivo ${file.name}: ${error.message}`);
+                }
+            }
+
+            event.target.value = '';
+            event.target.removeAttribute('data-playlist');
+        };
+
+        // Modifica a função updateMusicList para suportar playlists
+        const originalUpdateMusicList = updateMusicList;
+        updateMusicList = async function() {
+            try {
+                console.log('Atualizando lista de músicas...');
+                
+                // Recarrega a lista de playlists primeiro
+                await loadPlaylists();
+                
+                const url = currentPlaylist 
+                    ? `http://localhost:5000/list_music?playlist=${encodeURIComponent(currentPlaylist)}`
+                    : 'http://localhost:5000/list_music';
+                
+                const response = await fetch(url);
+                console.log('Resposta do servidor:', response.status);
+                
+                const data = await response.json();
+                console.log('Dados recebidos:', data);
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Conjunto de nomes de arquivo já presentes na playlist (via DB ou remoto)
+                const playlistFileNames = new Set(
+                    playlist
+                        .map(track => track.fileName || (typeof track.file === 'string' ? track.file.split('/').pop().split('?')[0] : undefined))
+                        .filter(Boolean)
+                );
+
+                // Filtra somente músicas novas por nome do arquivo
+                const newMusic = data.music.filter(music => !playlistFileNames.has(music.name));
+
+                if (newMusic.length > 0) {
+                    console.log('Novas músicas encontradas:', newMusic);
+
+                    for (const music of newMusic) {
+                        try {
+                            // Verifica se já existe no IndexedDB
+                            const existing = await getMusicByFileName(music.name);
+                            if (existing) {
+                                // Atualiza metadados se estiverem desconhecidos e o backend trouxe dados
+                                const isUnknown = (v) => !v || /desconhecid/i.test(String(v));
+                                const updated = { ...existing };
+                                let changed = false;
+                                if (music.title && (isUnknown(existing.title))) { updated.title = music.title; changed = true; }
+                                if (music.artist && (isUnknown(existing.artist))) { updated.artist = music.artist; changed = true; }
+                                if (music.album && (isUnknown(existing.album))) { updated.album = music.album; changed = true; }
+                                if (music.year && isUnknown(existing.year)) { updated.year = String(music.year); changed = true; }
+                                if (music.cover && (isUnknown(existing.cover) || /default-cover\.jpg$/.test(existing.cover || ''))) { updated.cover = music.cover; changed = true; }
+                                if (changed) {
+                                    try { await updateMusicInDB(updated); } catch (e) { console.error('Falha ao atualizar DB:', e); }
+                                }
+                                const url = arrayBufferToBlobUrl(updated.file, updated.fileType);
+                                playlist.push({ ...updated, file: url });
+                                continue;
+                            }
+
+                            // Baixa o arquivo do servidor e salva no IndexedDB
+                            const musicResponse = await fetch(`http://localhost:5000${music.path}`);
+                            const arrayBuffer = await musicResponse.arrayBuffer();
+                            
+                            // Determina o MIME type baseado na extensão
+                            const mimeType = getMimeType(music.name);
+                            
+                            // Tenta extrair metadados do arquivo
+                            let title = music.title || '';
+                            let artist = music.artist || '';
+                            let album = music.album || '';
+                            let coverUrl = music.cover || 'musics/default-cover.jpg';
+                            
+                            // Se não tem metadados, tenta buscar no Deezer
+                            if (!title || !artist) {
+                                try {
+                                    const enriched = await _enrich_metadata_from_deezer(title, artist);
+                                    title = enriched.get('title') || title;
+                                    artist = enriched.get('artist') || artist;
+                                    album = enriched.get('album') || album;
+                                    coverUrl = enriched.get('cover') || coverUrl;
+                                } catch {}
+                            }
+
+                            const musicRecord = {
+                                title: title,
+                                artist: artist,
+                                album: album,
+                                duration: "0:00",
+                                cover: coverUrl,
+                                file: arrayBuffer,
+                                fileType: mimeType,
+                                fileName: music.name,
+                                trackNumber: playlist.length + 1,
+                                year: (music.year && String(music.year)) || '',
+                                playlist: music.playlist || 'Geral'
+                            };
+
+                            const id = await saveMusicToDB(musicRecord);
+                            musicRecord.id = id;
+
+                            const blobUrl = arrayBufferToBlobUrl(arrayBuffer, mimeType);
+                            playlist.push({ ...musicRecord, file: blobUrl });
+                        } catch (e) {
+                            console.error('Falha ao processar música nova:', music, e);
+                        }
+                    }
+
+                    await dedupePlaylistAndDB();
+                    sortPlaylist();
+                    updatePlaylistHTML();
+                    updateDurations();
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar lista de músicas:', error);
+                if (error.message && error.message.includes('Failed to fetch')) {
+                    console.error('Não foi possível conectar ao servidor. Verifique se o servidor está rodando.');
+                }
+            }
+        };
+
+
+
+
+
+        // Mostra controles temporariamente quando o volume é alterado
+        function showControlsOnVolumeChange() {
+            if (!volumeControlsVisible) {
+                // Não mostra temporariamente, apenas atualiza o controle simples
+                setTimeout(syncSimpleVolume, 100);
+            }
+        }
+
+        // Atualiza as funções de volume para mostrar controles quando alterados
+        const originalUpdateMasterVolume = typeof updateMasterVolume === 'function' ? updateMasterVolume : function(){};
+        const originalUpdateLeftVolume = typeof updateLeftVolume === 'function' ? updateLeftVolume : function(){};
+        const originalUpdateRightVolume = typeof updateRightVolume === 'function' ? updateRightVolume : function(){};
+        const originalUpdateBalance = typeof updateBalance === 'function' ? updateBalance : function(){};
+
+        // Sobrescreve as funções para incluir a funcionalidade de mostrar controles
+        window.updateMasterVolume = function(value) {
+            if (originalUpdateMasterVolume) {
+                originalUpdateMasterVolume(value);
+            }
+            showControlsOnVolumeChange();
+        };
+
+        window.updateLeftVolume = function(value) {
+            if (originalUpdateLeftVolume) {
+                originalUpdateLeftVolume(value);
+            }
+            showControlsOnVolumeChange();
+        };
+
+        window.updateRightVolume = function(value) {
+            if (originalUpdateRightVolume) {
+                originalUpdateRightVolume(value);
+            }
+            showControlsOnVolumeChange();
+        };
+
+        window.updateBalance = function(value) {
+            if (originalUpdateBalance) {
+                originalUpdateBalance(value);
+            }
+            showControlsOnVolumeChange();
+        };
+
+        // Função para limpar URLs de blob antigas
+        function cleanupBlobUrls() {
+            // Limpa URLs de blob que não estão mais sendo usadas
+            const usedUrls = new Set();
+            playlist.forEach(track => {
+                if (track.file && track.file.startsWith('blob:')) {
+                    usedUrls.add(track.file);
+                }
+            });
+            
+            // Aqui você poderia implementar um sistema para rastrear e limpar URLs não utilizadas
+            // Por enquanto, apenas logamos as URLs em uso
+            console.log('URLs de blob em uso:', usedUrls.size);
+        }
+
+        // Função para recarregar uma música específica
+        async function reloadTrack(trackIndex) {
+            if (trackIndex < 0 || trackIndex >= playlist.length) {
+                console.error('Índice de faixa inválido:', trackIndex);
+                return;
+            }
+            
+            const track = playlist[trackIndex];
+            console.log('Recarregando faixa:', track.title);
+            
+            try {
+                // Se a faixa tem fileArrayBuffer, recria o blob URL
+                if (track.fileArrayBuffer && !track.file) {
+                    const blob = new Blob([track.fileArrayBuffer], { 
+                        type: track.fileType || 'audio/mpeg' 
+                    });
+                    track.file = URL.createObjectURL(blob);
+                    console.log('Blob URL recriado para:', track.title);
+                }
+                
+                // Se é a faixa atual, recarrega
+                if (trackIndex === currentTrack) {
+                    loadTrack();
+                }
+            } catch (error) {
+                console.error('Erro ao recarregar faixa:', error);
+            }
+        }
+
+        // Função para debug da playlist
+        function debugPlaylist() {
+            console.log('=== DEBUG DA PLAYLIST ===');
+            console.log('Playlist atual:', playlist);
+            console.log('Faixa atual:', currentTrack);
+            console.log('Reproduzindo:', isPlaying);
+            console.log('Elemento de áudio:', audio);
+            console.log('Src do áudio:', audio.src);
+            console.log('Ready state:', audio.readyState);
+            console.log('Network state:', audio.networkState);
+            console.log('Erro do áudio:', audio.error);
+            
+            if (playlist.length > 0) {
+                console.log('=== DETALHES DA FAIXA ATUAL ===');
+                const currentTrackData = playlist[currentTrack];
+                console.log('Faixa atual:', currentTrackData);
+                console.log('Tem arquivo:', !!currentTrackData.file);
+                console.log('Tem fileArrayBuffer:', !!currentTrackData.fileArrayBuffer);
+                console.log('Tipo do arquivo:', currentTrackData.fileType);
+                console.log('Nome do arquivo:', currentTrackData.fileName);
+                
+                if (currentTrackData.file) {
+                    console.log('URL do arquivo:', currentTrackData.file);
+                    console.log('É blob URL:', currentTrackData.file.startsWith('blob:'));
+                }
+            }
+            
+            // Testa a reprodução da faixa atual
+            if (playlist.length > 0) {
+                console.log('=== TESTE DE REPRODUÇÃO ===');
+                const testAudio = new Audio();
+                const track = playlist[currentTrack];
+                
+                if (track.file) {
+                    testAudio.src = track.file;
+                    testAudio.load();
+                    
+                    testAudio.addEventListener('canplaythrough', () => {
+                        console.log('✅ Teste de reprodução: SUCESSO');
+                        testAudio.src = '';
+                    });
+                    
+                    testAudio.addEventListener('error', (e) => {
+                        console.error('❌ Teste de reprodução: FALHOU');
+                        console.error('Erro:', testAudio.error);
+                        testAudio.src = '';
+                    });
+                    
+                    // Timeout de 5 segundos
+                    setTimeout(() => {
+                        if (testAudio.src) {
+                            console.log('⏰ Teste de reprodução: TIMEOUT');
+                            testAudio.src = '';
+                        }
+                    }, 5000);
+                } else {
+                    console.log('❌ Nenhum arquivo para testar');
+                }
+            }
+            
+            alert('Verifique o console para detalhes do debug');
         }
     </script>
 </body>
