@@ -1,209 +1,169 @@
-# Musickera - Player de Música Web
+# Musickêra - Player de Música
 
-Um player de música web moderno e responsivo com suporte a upload de músicas, playlist e controles de reprodução.
+Um player de música moderno e responsivo com suporte a múltiplas plataformas (Deezer, YouTube Music, Sua Música) e gerenciamento de playlists locais.
+
+## 🏗️ Estrutura do Projeto
+
+```
+playmusic-main/
+├── frontend/                 # Camada de Front-end
+│   ├── assets/              # Recursos estáticos
+│   │   └── favicon.ico
+│   ├── css/                 # Estilos CSS
+│   │   └── styles.css
+│   ├── js/                  # JavaScript
+│   │   └── app.js
+│   └── index.html           # Página principal
+├── backend/                 # Camada de Back-end
+│   ├── src/                 # Código fonte
+│   ├── config/              # Configurações
+│   ├── utils/               # Utilitários
+│   ├── api/                 # API para Vercel
+│   │   ├── index.py
+│   │   └── requirements.txt
+│   ├── musics/              # Biblioteca de músicas
+│   │   ├── covers/          # Capas dos álbuns
+│   │   └── [playlists]/     # Pastas de playlists
+│   ├── server.py            # Servidor principal
+│   ├── requirements.txt     # Dependências Python
+│   ├── test_playlists.py    # Testes de playlists
+│   └── remove_duplicates.py # Utilitário para remover duplicados
+├── README.md               # Documentação principal
+├── DEPLOY.md              # Guia de deploy
+├── LICENSE                # Licença
+└── vercel.json            # Configuração Vercel
+```
 
 ## 🚀 Funcionalidades
 
-- **Player de Música**
-  - Reprodução de músicas MP3, WAV e OGG
-  - Controles de play/pause, próximo/anterior
-  - Barra de progresso interativa
-  - Controle de volume
-  - Modos de repetição (nenhum, uma música, todas)
-  - Modo tela cheia
+### Front-end
+- **Interface Moderna**: Design responsivo com tema escuro
+- **Player Avançado**: Controles de reprodução, volume e progresso
+- **Busca Inteligente**: Integração com Deezer, YouTube Music e Sua Música
+- **Gerenciamento de Playlists**: Criação, edição e organização de playlists
+- **Upload de Arquivos**: Suporte a múltiplos formatos de áudio
+- **IndexedDB**: Armazenamento local para melhor performance
+- **Controles de Volume**: Master, canais individuais e balance
 
-- **Playlist**
-  - Lista de reprodução organizada
-  - Busca de músicas
-  - Upload de novas músicas
-  - Visualização de capas de álbum
-  - Informações de artista e álbum
+### Back-end
+- **API RESTful**: Endpoints para gerenciamento de músicas e playlists
+- **Download de Playlists**: Integração com YouTube Music via yt-dlp
+- **Processamento de Metadados**: Extração automática de informações de áudio
+- **Sistema de Playlists**: Organização por pastas
+- **CORS**: Suporte para requisições cross-origin
+- **Deploy Vercel**: Configuração para deploy serverless
 
-- **Upload de Músicas**
-  - Suporte a múltiplos arquivos
-  - Barra de progresso de upload
-  - Validação de tipos de arquivo
-  - Tratamento de erros
-  - Atualização automática da playlist
+## 🛠️ Tecnologias
 
-## 🛠️ Tecnologias Utilizadas
+### Front-end
+- **HTML5**: Estrutura semântica
+- **CSS3**: Estilos modernos com Flexbox e Grid
+- **JavaScript ES6+**: Funcionalidades avançadas
+- **IndexedDB**: Banco de dados local
+- **Web Audio API**: Controles de áudio avançados
 
-### Frontend
-- HTML5
-- CSS3 (com animações e gradientes)
-- JavaScript (Vanilla)
-- Design responsivo
-- Animações CSS
-- Gradientes e efeitos visuais
+### Back-end
+- **Python 3.8+**: Linguagem principal
+- **Flask**: Framework web
+- **yt-dlp**: Download de conteúdo do YouTube
+- **mutagen**: Processamento de metadados de áudio
+- **Flask-CORS**: Suporte a CORS
 
-### Backend
-- Python 3.x
-- Flask (Framework web)
-- Flask-CORS (Cross-Origin Resource Sharing)
-- Werkzeug (Utilitários web)
+## 📦 Instalação
 
-## 📦 Estrutura do Projeto
+### Pré-requisitos
+- Python 3.8 ou superior
+- Node.js (opcional, para desenvolvimento front-end)
 
-```
-musickera/
-├── index.html          # Interface do usuário
-├── server.py          # Servidor backend local
-├── api/               # API para deploy (Vercel)
-│   ├── index.py      # Endpoints da API
-│   └── requirements.txt # Dependências da API
-├── vercel.json        # Configuração do Vercel
-├── requirements.txt   # Dependências Python locais
-├── musics/           # Pasta de músicas
-│   ├── *.m4a        # Arquivos de música
-│   └── covers/      # Capas de álbum
-└── README.md         # Documentação
-```
-
-## 🚀 Deploy para Produção
-
-### Deploy no Vercel (Recomendado)
-
-1. **Fork do Repositório**
-   - Acesse [https://github.com/Edsoncesar319/Musickera_Player.git](https://github.com/Edsoncesar319/Musickera_Player.git)
-   - Clique em "Fork" para criar sua cópia
-
-2. **Conecte ao Vercel**
-   - Acesse [vercel.com](https://vercel.com)
-   - Faça login com sua conta GitHub
-   - Clique em "New Project"
-   - Importe o repositório forkado
-
-3. **Configure as Variáveis de Ambiente**
-   ```bash
-   MUSIC_DIR=/tmp/musics
-   COVERS_DIR=/tmp/covers
-   ```
-
-4. **Deploy Automático**
-   - O Vercel detectará automaticamente a configuração
-   - A API será deployada em `/api/*`
-   - O frontend será servido como arquivos estáticos
-
-### Deploy Manual no GitHub
-
-1. **Clone o Repositório**
-   ```bash
-   git clone https://github.com/Edsoncesar319/Musickera_Player.git
-   cd Musickera_Player
-   ```
-
-2. **Configure o Git**
-   ```bash
-   git config user.name "Seu Nome"
-   git config user.email "seu.email@exemplo.com"
-   ```
-
-3. **Adicione e Commit as Mudanças**
-   ```bash
-   git add .
-   git commit -m "Configuração para deploy com backend"
-   ```
-
-4. **Push para o Repositório**
-   ```bash
-   git push origin main
-   ```
-
-## 🔧 Instalação Local
-
-1. Clone o repositório:
+### Back-end
 ```bash
-git clone https://github.com/Edsoncesar319/Musickera_Player.git
-cd Musickera_Player
-```
-
-2. Instale as dependências Python:
-```bash
+cd backend
 pip install -r requirements.txt
-```
-
-3. Inicie o servidor local:
-```bash
 python server.py
 ```
 
-4. Abra o arquivo `index.html` no navegador ou acesse `http://localhost:5000`
+### Front-end
+```bash
+cd frontend
+# Abra index.html em um navegador moderno
+# Ou use um servidor local:
+python -m http.server 8000
+```
 
-## 💻 Uso
+## 🔧 Configuração
 
-### Player de Música
-- Clique no botão play/pause para controlar a reprodução
-- Use os botões de próximo/anterior para navegar entre músicas
-- Ajuste o volume usando o controle deslizante
-- Clique na barra de progresso para pular para um ponto específico
-- Use o botão de repetição para alternar entre os modos de repetição
-- Clique no botão de tela cheia para expandir o player
+### Variáveis de Ambiente
+```bash
+# Backend
+MUSIC_DIR=/path/to/musics
+COVERS_DIR=/path/to/covers
+PORT=5000
 
-### Playlist
-- Clique em uma música para reproduzi-la
-- Use a barra de busca para filtrar músicas
-- Clique no botão de upload para adicionar novas músicas
-- As músicas são organizadas automaticamente por artista e álbum
+# Frontend
+API_BASE_URL=http://localhost:5000
+```
 
-### Upload de Músicas
-- Clique no botão "Upload"
-- Selecione um ou mais arquivos de música
-- Aguarde o upload ser concluído
-- As novas músicas aparecerão automaticamente na playlist
+### Estrutura de Pastas de Música
+```
+musics/
+├── covers/              # Capas dos álbuns
+├── Playlist 1/         # Playlist organizada
+├── Playlist 2/         # Outra playlist
+└── Geral/              # Músicas gerais
+```
 
-## 🌐 API Endpoints
+## 🎵 Formatos Suportados
 
-### Produção (Vercel)
-- `GET /api/musics` - Lista todas as músicas
-- `GET /api/search?q=termo` - Busca músicas
-- `GET /api/health` - Verificação de saúde
-- `GET /api/playlist` - Lista playlists
+- **Áudio**: MP3, M4A, AAC, OGG, OPUS, WAV, FLAC, WebM
+- **Metadados**: ID3, MP4 tags
+- **Covers**: JPG, PNG, WebP
+
+## 🔌 APIs Integradas
+
+- **Deezer API**: Busca e streaming de músicas
+- **YouTube Music**: Download de playlists e vídeos
+- **Sua Música**: Busca de conteúdo brasileiro
+
+## 🚀 Deploy
+
+### Vercel (Recomendado)
+```bash
+# Configure o vercel.json
+vercel --prod
+```
+
+### Heroku
+```bash
+# Configure o Procfile
+git push heroku main
+```
 
 ### Local
-- `GET /musics` - Lista músicas locais
-- `POST /upload` - Upload de músicas
-- `GET /musics/<filename>` - Download de música
+```bash
+# Backend
+python server.py
+
+# Frontend
+python -m http.server 8000
+```
+
+## 📱 Responsividade
+
+O aplicativo é totalmente responsivo e funciona em:
+- **Desktop**: Interface completa com todos os controles
+- **Tablet**: Layout adaptado para telas médias
+- **Mobile**: Interface otimizada para touch
 
 ## 🔒 Segurança
 
-- Validação de tipos de arquivo
-- Nomes de arquivo seguros
-- Permissões de arquivo configuradas
-- Limite de tamanho de upload (100MB)
-- CORS configurado para desenvolvimento
+- **CORS**: Configurado para permitir requisições do front-end
+- **Validação**: Verificação de tipos de arquivo
+- **Sanitização**: Limpeza de nomes de arquivo
+- **Rate Limiting**: Proteção contra spam
 
-## 🐛 Logs e Debug
+## 🤝 Contribuição
 
-- Logs detalhados no arquivo `server.log`
-- Mensagens de erro no console do navegador
-- Feedback visual para erros de upload
-- Status de upload em tempo real
-
-## 📝 Notas de Desenvolvimento
-
-### Backend Local (server.py)
-- Servidor Flask na porta 5000
-- Suporte a CORS para desenvolvimento
-- Rotas para upload e listagem de músicas
-- Tratamento de erros e logging
-- Configuração de permissões de arquivo
-
-### Backend Produção (api/index.py)
-- API serverless para Vercel
-- Endpoints otimizados para produção
-- Respostas JSON padronizadas
-- Tratamento de erros robusto
-
-### Frontend (index.html)
-- Interface moderna e responsiva
-- Animações suaves
-- Controles de reprodução intuitivos
-- Sistema de upload com feedback visual
-- Busca em tempo real
-
-## 🤝 Contribuindo
-
-1. Faça um fork do projeto
+1. Fork o projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
 3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
 4. Push para a branch (`git push origin feature/AmazingFeature`)
@@ -211,17 +171,25 @@ python server.py
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## ✨ Créditos
+## 🆘 Suporte
 
-- Desenvolvido com ❤️ para amantes de música
-- Interface inspirada em players modernos
-- Animações e efeitos visuais personalizados
-- Deploy otimizado para Vercel
+- **Issues**: Use o GitHub Issues para reportar bugs
+- **Discussions**: Use o GitHub Discussions para perguntas
+- **Wiki**: Documentação detalhada no Wiki do projeto
 
-## 🔗 Links Úteis
+## 🔄 Changelog
 
-- **Repositório Original**: [https://github.com/Edsoncesar319/Musickera_Player.git](https://github.com/Edsoncesar319/Musickera_Player.git)
-- **Demo Online**: [musickeraPlus.vercel.app](https://musickeraPlus.vercel.app)
-- **Vercel**: [vercel.com](https://vercel.com) 
+### v2.0.0
+- ✅ Separação completa de front-end e back-end
+- ✅ Estrutura organizada de pastas
+- ✅ CSS e JavaScript em arquivos separados
+- ✅ Melhor organização do código
+- ✅ Documentação atualizada
+
+### v1.0.0
+- ✅ Player de música básico
+- ✅ Integração com Deezer
+- ✅ Sistema de playlists
+- ✅ Upload de arquivos 
