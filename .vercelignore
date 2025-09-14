@@ -1,0 +1,46 @@
+# Arquivos de desenvolvimento
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Arquivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de teste
+tests/
+test_*.py
+*_test.py
+
+# Arquivos de backup
+*.bak
+*.backup
+
+# Arquivos de música grandes (para otimizar deploy)
+# musics/*.m4a
+# musics/*.mp3
+# musics/*.wav
+# musics/*.ogg
+
+# Manter apenas as capas para o deploy
+# musics/covers/

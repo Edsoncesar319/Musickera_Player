@@ -214,5 +214,3 @@ A separação das camadas foi realizada com sucesso, mantendo todas as funcional
 **Data da Separação**: 30/08/2025  
 **Versão**: 2.0.0  
 **Status**: ✅ Concluído
-
-

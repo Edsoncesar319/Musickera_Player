@@ -208,5 +208,3 @@ Exemplo:
 ✅ [PRIORIDADE 2] Carregadas 5 playlists
 ✅ Player inicializado com sucesso!
 ```
-
-

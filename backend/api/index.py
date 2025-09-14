@@ -5,10 +5,14 @@ from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from typing import Optional, Dict
 import mimetypes
+from config import config
 
 # Configuração para Vercel
 app = Flask(__name__)
-CORS(app)
+app.config.from_object(config['production'])
+
+# Configurar CORS com origens específicas
+CORS(app, origins=app.config['CORS_ORIGINS'])
 
 # Ensure correct audio MIME types
 mimetypes.add_type('audio/webm', '.webm')
@@ -231,6 +235,9 @@ def serve_cover(filename):
             "success": False,
             "error": str(e)
         }), 500
+
+# Para Vercel serverless
+app.debug = False
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
