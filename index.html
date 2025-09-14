@@ -54,7 +54,7 @@
 
         .header h1 {
             font-size: 28px;
-            background: linear-gradient(45deg, #1DB954, #1ed760);
+            background: linear-gradient(45deg, #02f82b, #1ed760);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -557,21 +557,210 @@
 
         .volume-container {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 32px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
+            flex-direction: column;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
         }
 
-        .volume-container:hover {
-            background: rgba(255, 255, 255, 0.1);
+        /* Estado escondido do container */
+        .volume-container.hidden {
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        /* Animação de transição */
+        .volume-container {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Ícone de toggle */
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .volume-toggle-btn.hidden .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Melhorias para o ícone do botão toggle */
+        .volume-toggle-btn .toggle-icon {
+            font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .volume-toggle-btn:hover .toggle-icon {
+            transform: scale(1.1);
+        }
+
+        .volume-toggle-btn.hidden .toggle-icon {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .volume-toggle-btn.hidden:hover .toggle-icon {
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        /* Animação de pulso para chamar atenção */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .volume-toggle-btn.hidden {
+            animation: pulse 2s infinite;
+        }
+
+        .volume-toggle-btn.hidden:hover {
+            animation: none;
+        }
+
+        /* Wrapper para volume controls */
+        .volume-wrapper {
+            position: relative;
+            margin-top: 32px;
+        }
+
+        .volume-toggle-btn {
+            background: linear-gradient(135deg, #1DB954, #1ed760);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+            flex-shrink: 0;
+        }
+
+        .volume-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(29, 185, 84, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .volume-toggle-btn.hidden {
+            background: linear-gradient(135deg, #04f799, #03fc24);
+            box-shadow: 0 4px 12px rgba(6, 114, 33, 0.3);
+        }
+
+        .volume-toggle-btn.hidden:hover {
+            box-shadow: 0 6px 16px rgba(44, 248, 3, 0.4);
+        }
+
+        .volume-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .volume-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .volume-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .volume-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 500;
+            min-width: 60px;
         }
 
         .volume-slider {
-            width: 120px;
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            transition: all 0.3s ease;
+            touch-action: none;
+            position: relative;
+        }
+
+        .volume-slider:hover {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #1DB954, #1ed760);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 6px 16px rgba(29, 185, 84, 0.4);
+        }
+
+        .volume-slider::-webkit-slider-track {
+            background: linear-gradient(90deg, rgba(29, 185, 84, 0.3), rgba(29, 185, 84, 0.1));
+            border-radius: 3px;
+        }
+
+        .volume-value {
+            color: #1DB954;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .balance-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(29, 185, 84, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(29, 185, 84, 0.2);
+        }
+
+        .balance-slider {
+            flex: 1;
             height: 4px;
             -webkit-appearance: none;
             appearance: none;
@@ -579,27 +768,58 @@
             border-radius: 2px;
             outline: none;
             transition: all 0.3s ease;
-            touch-action: none;
         }
 
-        .volume-slider:hover {
-            height: 6px;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
+        .balance-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: #fff;
+            width: 14px;
+            height: 14px;
+            background: #1DB954;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(29, 185, 84, 0.3);
             transition: all 0.3s ease;
         }
 
-        .volume-slider::-webkit-slider-thumb:hover {
+        .balance-slider::-webkit-slider-thumb:hover {
             transform: scale(1.2);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .balance-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .volume-presets {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .volume-preset-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .volume-preset-btn:hover {
+            background: rgba(29, 185, 84, 0.2);
+            border-color: #1DB954;
+            color: #1DB954;
+            transform: translateY(-1px);
+        }
+
+        .volume-preset-btn.active {
+            background: #1DB954;
+            border-color: #1DB954;
+            color: #fff;
         }
 
         .playlist {
@@ -967,6 +1187,12 @@
                 padding: 8px 16px;
                 font-size: 12px;
             }
+
+            .volume-toggle-btn {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+            }
         }
 
         @media (max-height: 480px) and (orientation: landscape) {
@@ -1175,6 +1401,211 @@
                 'opsz' 24;
             vertical-align: middle;
         }
+
+        /* Estilos para os ícones de fone */
+        .headphone-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #1DB954, #1ed760);
+            border-radius: 50%;
+            color: #fff;
+            font-weight: bold;
+            font-size: 10px;
+            margin-right: 4px;
+            box-shadow: 0 2px 4px rgba(29, 185, 84, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .headphone-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(29, 185, 84, 0.4);
+        }
+
+        /* Melhorias para os controles de volume */
+        .volume-row:hover .volume-label {
+            color: #1DB954;
+        }
+
+        .volume-row:hover .volume-slider {
+            background: rgba(29, 185, 84, 0.2);
+        }
+
+        .balance-control:hover {
+            background: rgba(29, 185, 84, 0.15);
+            border-color: rgba(29, 185, 84, 0.3);
+        }
+
+        /* Container para volume value e botão toggle */
+        .volume-value-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        /* Animação para os valores de volume */
+        .volume-value {
+            transition: all 0.3s ease;
+        }
+
+        .volume-row:hover .volume-value {
+            transform: scale(1.1);
+            color: #1ed760;
+        }
+
+        /* Responsividade para os controles de volume */
+        @media (max-width: 768px) {
+            .volume-container {
+                padding: 16px;
+            }
+
+            .volume-controls {
+                gap: 12px;
+            }
+
+            .volume-row {
+                gap: 8px;
+            }
+
+            .volume-label {
+                min-width: 50px;
+                font-size: 11px;
+            }
+
+            .volume-value {
+                min-width: 30px;
+                font-size: 11px;
+            }
+
+            .volume-value-container {
+                gap: 4px;
+            }
+
+            .volume-presets {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .volume-preset-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+        }
+
+        /* Controles Avançados */
+        .volume-advanced-controls {
+            display: block;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .volume-container.hidden .volume-advanced-controls {
+            display: none;
+        }
+
+        /* Controle Simples */
+        .volume-simple-control {
+            display: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .volume-container.hidden .volume-simple-control {
+            display: block;
+        }
+
+        /* Esconde o botão simples quando controles avançados estão visíveis */
+        .volume-simple-control .volume-toggle-btn {
+            display: flex;
+        }
+
+        .volume-advanced-controls .volume-toggle-btn {
+            display: flex;
+        }
+
+        .simple-volume-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .simple-volume-row:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .simple-volume-row .material-symbols-rounded {
+            color: #1DB954;
+            font-size: 20px;
+        }
+
+        .simple-volume-row .volume-slider {
+            flex: 1;
+            height: 6px;
+        }
+
+        .simple-volume-row .volume-value {
+            color: #1DB954;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        /* Melhorias para o controle simples */
+        .volume-container.hidden {
+            max-height: none;
+            padding: 12px;
+            margin-top: 32px;
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+        }
+
+        .volume-container.hidden .volume-simple-control {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsividade para o controle simples */
+        @media (max-width: 768px) {
+            .simple-volume-row {
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .simple-volume-row .material-symbols-rounded {
+                font-size: 18px;
+            }
+
+            .simple-volume-row .volume-value {
+                font-size: 11px;
+                min-width: 30px;
+            }
+        }
+
+                    /* Ajustes para o botão toggle em mobile */
+            .volume-toggle-btn {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+            }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
@@ -1248,10 +1679,87 @@
                     </button>
                 </div>
 
-                <div class="volume-container">
-                    <span class="material-symbols-rounded">volume_up</span>
-                    <input type="range" class="volume-slider" min="0" max="100" value="100">
+                <!-- Wrapper para volume controls -->
+                <div class="volume-wrapper">
+                    <div class="volume-container">
+                    <!-- Controles Avançados -->
+                    <div class="volume-advanced-controls">
+                        <div class="volume-header">
+                            <span class="material-symbols-rounded">volume_up</span>
+                            <span>Controles de Volume</span>
+                        </div>
+                        
+                        <div class="volume-controls">
+                            <!-- Volume Master -->
+                            <div class="volume-row">
+                                <div class="volume-label">
+                                    <span class="material-symbols-rounded">volume_up</span>
+                                    Master
+                                </div>
+                                <input type="range" class="volume-slider" id="masterVolume" min="0" max="100" value="100">
+                                <div class="volume-value-container">
+                                    <span class="volume-value" id="masterVolumeValue">100%</span>
+                                    <button class="volume-toggle-btn" id="volumeToggleBtn" title="Esconder/Mostrar Controles de Volume">
+                                        <span class="material-symbols-rounded toggle-icon">settings</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Volume Canal Esquerdo -->
+                            <div class="volume-row">
+                                <div class="volume-label">
+                                    <span class="material-symbols-rounded">headphones</span>
+                                    <span class="headphone-icon">D</span>
+                                </div>
+                                <input type="range" class="volume-slider" id="leftVolume" min="0" max="100" value="100">
+                                <span class="volume-value" id="leftVolumeValue">100%</span>
+                            </div>
+                            
+                            <!-- Volume Canal Direito -->
+                            <div class="volume-row">
+                                <div class="volume-label">
+                                    <span class="material-symbols-rounded">headphones</span>
+                                    <span class="headphone-icon">R</span>
+                                </div>
+                                <input type="range" class="volume-slider" id="rightVolume" min="0" max="100" value="100">
+                                <span class="volume-value" id="rightVolumeValue">100%</span>
+                            </div>
+                            
+                            <!-- Controle de Balance -->
+                            <div class="balance-control">
+                                <div class="balance-label">
+                                    <span class="material-symbols-rounded">balance</span>
+                                    Balance
+                                </div>
+                                <input type="range" class="balance-slider" id="balanceSlider" min="-100" max="100" value="0">
+                                <span class="volume-value" id="balanceValue">C</span>
+                            </div>
+                            
+                            <!-- Presets de Volume -->
+                            <div class="volume-presets">
+                                <button class="volume-preset-btn" onclick="setVolumePreset(25)">25%</button>
+                                <button class="volume-preset-btn" onclick="setVolumePreset(50)">50%</button>
+                                <button class="volume-preset-btn" onclick="setVolumePreset(75)">75%</button>
+                                <button class="volume-preset-btn" onclick="setVolumePreset(100)">100%</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Controle Simples (quando avançado está escondido) -->
+                    <div class="volume-simple-control">
+                        <div class="simple-volume-row">
+                            <span class="material-symbols-rounded">volume_up</span>
+                            <input type="range" class="volume-slider" id="simpleVolume" min="0" max="100" value="100">
+                            <div class="volume-value-container">
+                                <span class="volume-value" id="simpleVolumeValue">100%</span>
+                                <button class="volume-toggle-btn" id="volumeToggleBtnSimple" title="Esconder/Mostrar Controles de Volume">
+                                    <span class="material-symbols-rounded toggle-icon">tune</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
             </div>
 
             <div class="playlist">
@@ -1275,12 +1783,12 @@
     <script>
         const playlist = [
             {
-                title: "Haverá Sinais",
-                artist: "Canção de Jorge & Mateus e Lauana Prado",
+                title: "Titulo da Música",
+                artist: "Nom,e do artista",
                 album: "Check-In",
                 duration: "3:45",
                 cover: "/",
-                file: "Haverá Sinais.mp3",
+                file: "musica.mp3",
                 trackNumber: 1
             },
             
@@ -1568,6 +2076,14 @@
                 playerContainer.innerHTML = embedHtml;
             } else {
                 // Para músicas locais, usa o player padrão
+                if (!track.file && track.fileArrayBuffer) {
+                    try {
+                        const blob = new Blob([track.fileArrayBuffer], { type: track.fileType || 'audio/mpeg' });
+                        track.file = URL.createObjectURL(blob);
+                    } catch (e) {
+                        console.error('Falha ao criar URL do blob para a faixa:', e);
+                    }
+                }
                 audio.src = track.file;
                 audio.load();
                 updatePlayerInfo(track);
@@ -1743,28 +2259,33 @@
 
         // Atualiza a função updatePlaylistHTML para usar o valor atual da busca
         function updatePlaylistHTML() {
-            const trackList = document.querySelector('.track-list');
-            const clearButton = document.querySelector('.clear-playlist');
-            
-            // Atualiza a lista de músicas
-            trackList.innerHTML = playlist.map((track, index) => `
-                <li class="track-item ${index === currentTrack ? 'active' : ''}" 
-                    onclick="playTrack(${index})">
-                    <span class="track-number">${(index + 1).toString().padStart(2, '0')}</span>
-                    <img src="${track.cover || 'musics/default-cover.jpg'}" alt="capa" style="width:40px;height:40px;border-radius:6px;object-fit:cover;margin-right:8px;">
-                    <div class="track-info-small">
-                        <div class="track-title-small">${track.title}</div>
-                        <div class="artist-name-small">${track.artist}</div>
-                    </div>
-                    <span class="track-duration">${track.duration}</span>
-                    <button class="remove-track" onclick="event.stopPropagation(); removeTrack(${index})">×</button>
-                </li>
-            `).join('');
-            
-            // Mostra ou esconde o botão de limpar playlist
-            clearButton.style.display = playlist.length > 0 ? 'block' : 'none';
-            
-            adjustFontSize();
+            if (window.__renderScheduled) return;
+            window.__renderScheduled = true;
+            requestAnimationFrame(() => {
+                window.__renderScheduled = false;
+                const trackList = document.querySelector('.track-list');
+                const clearButton = document.querySelector('.clear-playlist');
+                
+                // Atualiza a lista de músicas
+                trackList.innerHTML = playlist.map((track, index) => `
+                    <li class="track-item ${index === currentTrack ? 'active' : ''}" 
+                        onclick="playTrack(${index})">
+                        <span class="track-number">${(index + 1).toString().padStart(2, '0')}</span>
+                        <img src="${track.cover || 'musics/default-cover.jpg'}" loading="lazy" alt="capa" style="width:40px;height:40px;border-radius:6px;object-fit:cover;margin-right:8px;">
+                        <div class="track-info-small">
+                            <div class="track-title-small">${track.title}</div>
+                            <div class="artist-name-small">${track.artist}</div>
+                        </div>
+                        <span class="track-duration">${track.duration}</span>
+                        <button class="remove-track" onclick="event.stopPropagation(); removeTrack(${index})">×</button>
+                    </li>
+                `).join('');
+                
+                // Mostra ou esconde o botão de limpar playlist
+                clearButton.style.display = playlist.length > 0 ? 'block' : 'none';
+                
+                adjustFontSize();
+            });
         }
 
         // Função para formatar a duração da música
@@ -1827,7 +2348,7 @@
             });
 
             updatePlaylistHTML();
-            savePlaylist();
+            savePlaylistThrottled();
         }
 
         // Inicializa o player com as durações atualizadas
@@ -2334,6 +2855,21 @@
             localStorage.setItem('musickeraPlaylist', JSON.stringify(playlistData));
         }
 
+        // Salva a playlist com limitação de frequência para evitar excesso de gravações
+        let __saveScheduled = false;
+        function savePlaylistThrottled() {
+            if (__saveScheduled) return;
+            __saveScheduled = true;
+            setTimeout(() => {
+                __saveScheduled = false;
+                try {
+                    savePlaylist();
+                } catch (e) {
+                    console.error('Falha ao salvar playlist:', e);
+                }
+            }, 500);
+        }
+
         // Função para carregar a playlist do localStorage
         function loadPlaylist() {
             const savedPlaylist = localStorage.getItem('musickeraPlaylist');
@@ -2425,9 +2961,9 @@
                 playlist.length = 0;
                 
                 for (const music of musics) {
-                    // Cria URL do blob para reprodução
-                    const blob = new Blob([music.file], { type: music.fileType });
-                    music.file = URL.createObjectURL(blob);
+                    // Adia a criação de Blob URL para o momento da reprodução
+                    music.fileArrayBuffer = music.file;
+                    delete music.file;
                     playlist.push(music);
                 }
                 
@@ -2663,6 +3199,526 @@
                 }
             });
         }
+
+        // ===== CONTROLES DE VOLUME INDIVIDUAL =====
+        
+        // Variáveis para controle de volume
+        let masterVolume = 100;
+        let leftVolume = 100;
+        let rightVolume = 100;
+        let balance = 0;
+
+        // Função para criar um AudioContext para controle de canais
+        let audioContext;
+        let gainNode;
+        let splitter;
+        let leftGain;
+        let rightGain;
+
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                gainNode = audioContext.createGain();
+                splitter = audioContext.createChannelSplitter(2);
+                leftGain = audioContext.createGain();
+                rightGain = audioContext.createGain();
+                
+                // Conecta os nós
+                gainNode.connect(splitter);
+                splitter.connect(leftGain, 0);
+                splitter.connect(rightGain, 1);
+                leftGain.connect(audioContext.destination, 0);
+                rightGain.connect(audioContext.destination, 1);
+            }
+        }
+
+        // Função para aplicar volume master
+        function updateMasterVolume(value) {
+            masterVolume = value;
+            if (gainNode) {
+                gainNode.gain.value = value / 100;
+            }
+            document.getElementById('masterVolumeValue').textContent = value + '%';
+            
+            // Atualiza os presets
+            updateVolumePresetButtons();
+        }
+
+        // Função para aplicar volume do canal esquerdo
+        function updateLeftVolume(value) {
+            leftVolume = value;
+            if (leftGain) {
+                leftGain.gain.value = (value / 100) * (masterVolume / 100);
+            }
+            document.getElementById('leftVolumeValue').textContent = value + '%';
+        }
+
+        // Função para aplicar volume do canal direito
+        function updateRightVolume(value) {
+            rightVolume = value;
+            if (rightGain) {
+                rightGain.gain.value = (value / 100) * (masterVolume / 100);
+            }
+            document.getElementById('rightVolumeValue').textContent = value + '%';
+        }
+
+        // Função para aplicar balance
+        function updateBalance(value) {
+            balance = value;
+            let balanceText = 'C';
+            if (value < 0) {
+                balanceText = 'D';
+            } else if (value > 0) {
+                balanceText = 'R';
+            }
+            document.getElementById('balanceValue').textContent = balanceText;
+            
+            // Aplica o balance nos canais
+            if (leftGain && rightGain) {
+                const leftFactor = value <= 0 ? 1 : Math.max(0, 1 - (value / 100));
+                const rightFactor = value >= 0 ? 1 : Math.max(0, 1 + (value / 100));
+                
+                leftGain.gain.value = (leftVolume / 100) * (masterVolume / 100) * leftFactor;
+                rightGain.gain.value = (rightVolume / 100) * (masterVolume / 100) * rightFactor;
+            }
+        }
+
+        // Função para definir presets de volume
+        function setVolumePreset(volume) {
+            masterVolume = volume;
+            leftVolume = volume;
+            rightVolume = volume;
+            balance = 0;
+            
+            // Atualiza os sliders
+            document.getElementById('masterVolume').value = volume;
+            document.getElementById('leftVolume').value = volume;
+            document.getElementById('rightVolume').value = volume;
+            document.getElementById('balanceSlider').value = 0;
+            
+            // Atualiza o controle simples também
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            if (simpleVolumeSlider) {
+                simpleVolumeSlider.value = volume;
+            }
+            
+            // Aplica os volumes
+            updateMasterVolume(volume);
+            updateLeftVolume(volume);
+            updateRightVolume(volume);
+            updateBalance(0);
+            
+            // Atualiza os presets
+            updateVolumePresetButtons();
+        }
+
+        // Função para atualizar os botões de preset
+        function updateVolumePresetButtons() {
+            const presetButtons = document.querySelectorAll('.volume-preset-btn');
+            presetButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === masterVolume) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Função para aplicar volume ao áudio
+        function applyVolumeToAudio() {
+            if (!audioContext) {
+                initAudioContext();
+            }
+            
+            // Cria uma fonte de áudio a partir do elemento audio
+            const audioElement = document.getElementById('playerAudio');
+            if (audioElement && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            // Aplica os volumes atuais
+            updateMasterVolume(masterVolume);
+            updateLeftVolume(leftVolume);
+            updateRightVolume(rightVolume);
+            updateBalance(balance);
+        }
+
+        // Event listeners para os controles de volume
+        document.addEventListener('DOMContentLoaded', function() {
+            // Master Volume
+            const masterSlider = document.getElementById('masterVolume');
+            if (masterSlider) {
+                masterSlider.addEventListener('input', function() {
+                    updateMasterVolume(parseInt(this.value));
+                });
+            }
+
+            // Left Channel Volume
+            const leftSlider = document.getElementById('leftVolume');
+            if (leftSlider) {
+                leftSlider.addEventListener('input', function() {
+                    updateLeftVolume(parseInt(this.value));
+                });
+            }
+
+            // Right Channel Volume
+            const rightSlider = document.getElementById('rightVolume');
+            if (rightSlider) {
+                rightSlider.addEventListener('input', function() {
+                    updateRightVolume(parseInt(this.value));
+                });
+            }
+
+            // Balance Slider
+            const balanceSlider = document.getElementById('balanceSlider');
+            if (balanceSlider) {
+                balanceSlider.addEventListener('input', function() {
+                    updateBalance(parseInt(this.value));
+                });
+            }
+
+            // Inicializa o contexto de áudio quando o usuário interagir
+            document.addEventListener('click', function() {
+                if (!audioContext) {
+                    initAudioContext();
+                }
+            }, { once: true });
+        });
+
+        // Função para testar os canais
+        function testChannels() {
+            if (!audioContext) {
+                initAudioContext();
+            }
+            
+            // Toca um tom de teste em cada canal
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        // Adiciona botão de teste (opcional)
+        function addTestButton() {
+            const testBtn = document.createElement('button');
+            testBtn.className = 'volume-preset-btn';
+            testBtn.textContent = 'Test';
+            testBtn.onclick = testChannels;
+            testBtn.style.marginTop = '8px';
+            
+            const presetsContainer = document.querySelector('.volume-presets');
+            if (presetsContainer) {
+                presetsContainer.appendChild(testBtn);
+            }
+        }
+
+        // Inicializa os controles quando a página carregar
+        window.addEventListener('load', function() {
+            addTestButton();
+            updateVolumePresetButtons();
+        });
+
+        // ===== CONTROLE DE VISIBILIDADE DOS CONTROLES DE VOLUME =====
+        
+        let volumeControlsVisible = localStorage.getItem('volumeControlsVisible') !== 'false';
+        
+        // Se não há estado salvo, define como visível por padrão
+        if (localStorage.getItem('volumeControlsVisible') === null) {
+            localStorage.setItem('volumeControlsVisible', 'true');
+        }
+
+        // Função para alternar a visibilidade dos controles de volume
+        function toggleVolumeControls() {
+            const volumeContainer = document.querySelector('.volume-container');
+            const toggleBtn = document.getElementById('volumeToggleBtn');
+            const toggleBtnSimple = document.getElementById('volumeToggleBtnSimple');
+            
+            // Verifica se os elementos existem
+            if (!volumeContainer || !toggleBtn || !toggleBtnSimple) {
+                console.warn('Elementos de controle de volume não encontrados');
+                return;
+            }
+            
+            volumeControlsVisible = !volumeControlsVisible;
+            
+            if (volumeControlsVisible) {
+                // Mostra os controles avançados
+                if (volumeContainer) {
+                    volumeContainer.classList.remove('hidden');
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('hidden');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleIcon) {
+                        toggleIcon.textContent = 'settings';
+                    }
+                    toggleBtn.title = 'Esconder Controles de Volume';
+                }
+                
+                // Atualiza o botão simples
+                if (toggleBtnSimple) {
+                    const toggleIconSimple = toggleBtnSimple.querySelector('.toggle-icon');
+                    if (toggleIconSimple) {
+                        toggleIconSimple.textContent = 'settings';
+                    }
+                    toggleBtnSimple.title = 'Esconder Controles de Volume';
+                }
+                
+                // Salva o estado no localStorage
+                localStorage.setItem('volumeControlsVisible', 'true');
+            } else {
+                // Esconde os controles avançados (mostra o simples)
+                if (volumeContainer) {
+                    volumeContainer.classList.add('hidden');
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.classList.add('hidden');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleIcon) {
+                        toggleIcon.textContent = 'tune';
+                    }
+                    toggleBtn.title = 'Mostrar Controles de Volume';
+                }
+                
+                // Atualiza o botão simples
+                if (toggleBtnSimple) {
+                    const toggleIconSimple = toggleBtnSimple.querySelector('.toggle-icon');
+                    if (toggleIconSimple) {
+                        toggleIconSimple.textContent = 'tune';
+                    }
+                    toggleBtnSimple.title = 'Mostrar Controles de Volume';
+                }
+                
+                // Salva o estado no localStorage
+                localStorage.setItem('volumeControlsVisible', 'false');
+            }
+        }
+
+        // Função para restaurar o estado dos controles de volume
+        function restoreVolumeControlsState() {
+            const volumeContainer = document.querySelector('.volume-container');
+            const toggleBtn = document.getElementById('volumeToggleBtn');
+            const toggleBtnSimple = document.getElementById('volumeToggleBtnSimple');
+            
+            // Verifica se os elementos existem
+            if (!volumeContainer || !toggleBtn || !toggleBtnSimple) {
+                console.warn('Elementos de controle de volume não encontrados na restauração');
+                return;
+            }
+            
+            if (!volumeControlsVisible) {
+                // Se deve estar escondido
+                if (volumeContainer) {
+                    volumeContainer.classList.add('hidden');
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.classList.add('hidden');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleIcon) {
+                        toggleIcon.textContent = 'tune';
+                    }
+                    toggleBtn.title = 'Mostrar Controles de Volume';
+                }
+                
+                if (toggleBtnSimple) {
+                    const toggleIconSimple = toggleBtnSimple.querySelector('.toggle-icon');
+                    if (toggleIconSimple) {
+                        toggleIconSimple.textContent = 'tune';
+                    }
+                    toggleBtnSimple.title = 'Mostrar Controles de Volume';
+                }
+            } else {
+                // Se deve estar visível
+                if (volumeContainer) {
+                    volumeContainer.classList.remove('hidden');
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('hidden');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleIcon) {
+                        toggleIcon.textContent = 'settings';
+                    }
+                    toggleBtn.title = 'Esconder Controles de Volume';
+                }
+                
+                if (toggleBtnSimple) {
+                    const toggleIconSimple = toggleBtnSimple.querySelector('.toggle-icon');
+                    if (toggleIconSimple) {
+                        toggleIconSimple.textContent = 'settings';
+                    }
+                    toggleBtnSimple.title = 'Esconder Controles de Volume';
+                }
+            }
+        }
+
+        // Função para sincronizar volume simples com volume master
+        function syncSimpleVolume() {
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            const simpleVolumeValue = document.getElementById('simpleVolumeValue');
+            const masterVolumeSlider = document.getElementById('masterVolume');
+            
+            if (simpleVolumeSlider && masterVolumeSlider && simpleVolumeValue) {
+                const masterValue = masterVolumeSlider.value;
+                simpleVolumeSlider.value = masterValue;
+                simpleVolumeValue.textContent = masterValue + '%';
+            } else {
+                console.warn('Elementos de volume não encontrados para sincronização');
+            }
+        }
+
+        // Função para aplicar volume simples
+        function updateSimpleVolume(value) {
+            // Atualiza o volume master também
+            if (typeof updateMasterVolume === 'function') {
+                updateMasterVolume(value);
+            }
+            
+            // Atualiza o slider e valor do controle simples
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            const simpleVolumeValue = document.getElementById('simpleVolumeValue');
+            
+            if (simpleVolumeSlider && simpleVolumeValue) {
+                simpleVolumeSlider.value = value;
+                simpleVolumeValue.textContent = value + '%';
+            } else {
+                console.warn('Elementos de volume simples não encontrados');
+            }
+        }
+
+        // Event listener para o botão toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('volumeToggleBtn');
+            const toggleBtnSimple = document.getElementById('volumeToggleBtnSimple');
+            
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleVolumeControls);
+            } else {
+                console.warn('Botão de toggle de volume não encontrado');
+            }
+            
+            if (toggleBtnSimple) {
+                toggleBtnSimple.addEventListener('click', toggleVolumeControls);
+            } else {
+                console.warn('Botão de toggle de volume simples não encontrado');
+            }
+            
+            // Event listeners para os controles de volume
+            const masterVolumeSlider = document.getElementById('masterVolume');
+            const leftVolumeSlider = document.getElementById('leftVolume');
+            const rightVolumeSlider = document.getElementById('rightVolume');
+            const balanceSlider = document.getElementById('balanceSlider');
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            
+            if (masterVolumeSlider) {
+                masterVolumeSlider.addEventListener('input', function() {
+                    updateMasterVolume(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de volume master não encontrado');
+            }
+            
+            if (leftVolumeSlider) {
+                leftVolumeSlider.addEventListener('input', function() {
+                    updateLeftVolume(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de volume esquerdo não encontrado');
+            }
+            
+            if (rightVolumeSlider) {
+                rightVolumeSlider.addEventListener('input', function() {
+                    updateRightVolume(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de volume direito não encontrado');
+            }
+            
+            if (balanceSlider) {
+                balanceSlider.addEventListener('input', function() {
+                    updateBalance(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de balance não encontrado');
+            }
+            
+            if (simpleVolumeSlider) {
+                simpleVolumeSlider.addEventListener('input', function() {
+                    updateSimpleVolume(parseInt(this.value));
+                });
+            } else {
+                console.warn('Slider de volume simples não encontrado');
+            }
+            
+            // Restaura o estado salvo
+            restoreVolumeControlsState();
+            
+            // Sincroniza o volume simples com o master
+            syncSimpleVolume();
+            
+            // Log do estado inicial para debug
+            console.log('Estado inicial dos controles de volume:', volumeControlsVisible ? 'visível' : 'escondido');
+        });
+
+        // Atalho de teclado para mostrar/esconder controles (Ctrl + V)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'v') {
+                e.preventDefault();
+                toggleVolumeControls();
+            }
+        });
+
+        // Mostra controles temporariamente quando o volume é alterado
+        function showControlsOnVolumeChange() {
+            if (!volumeControlsVisible) {
+                // Não mostra temporariamente, apenas atualiza o controle simples
+                setTimeout(syncSimpleVolume, 100);
+            }
+        }
+
+        // Atualiza as funções de volume para mostrar controles quando alterados
+        const originalUpdateMasterVolume = typeof updateMasterVolume === 'function' ? updateMasterVolume : function(){};
+        const originalUpdateLeftVolume = typeof updateLeftVolume === 'function' ? updateLeftVolume : function(){};
+        const originalUpdateRightVolume = typeof updateRightVolume === 'function' ? updateRightVolume : function(){};
+        const originalUpdateBalance = typeof updateBalance === 'function' ? updateBalance : function(){};
+
+        // Sobrescreve as funções para incluir a funcionalidade de mostrar controles
+        window.updateMasterVolume = function(value) {
+            if (originalUpdateMasterVolume) {
+                originalUpdateMasterVolume(value);
+            }
+            showControlsOnVolumeChange();
+        };
+
+        window.updateLeftVolume = function(value) {
+            if (originalUpdateLeftVolume) {
+                originalUpdateLeftVolume(value);
+            }
+            showControlsOnVolumeChange();
+        };
+
+        window.updateRightVolume = function(value) {
+            if (originalUpdateRightVolume) {
+                originalUpdateRightVolume(value);
+            }
+            showControlsOnVolumeChange();
+        };
+
+        window.updateBalance = function(value) {
+            if (originalUpdateBalance) {
+                originalUpdateBalance(value);
+            }
+            showControlsOnVolumeChange();
+        };
     </script>
 </body>
 </html> 
