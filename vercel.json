@@ -16,6 +16,10 @@
       "dest": "/api/index.py"
     },
     {
+      "src": "/(list_playlists|list_music|create_playlist|extract_playlist_name|download_playlist|musics/.*)",
+      "dest": "/api/index.py"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

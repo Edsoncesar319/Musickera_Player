@@ -6,7 +6,7 @@ let audio = document.getElementById('playerAudio');
 let repeatMode = 'none'; // 'none', 'one', 'all'
 
 // Base de API/backend para recursos (configurável via window.API_BASE_URL ou localStorage)
-const API_BASE_URL = (typeof window !== 'undefined' && (window.API_BASE_URL || localStorage.getItem('API_BASE_URL'))) || 'http://localhost:5000';
+const API_BASE_URL = (typeof window !== 'undefined' && (window.API_BASE_URL || localStorage.getItem('API_BASE_URL'))) || 'https://automatic-giggle-wr97449prwrrc97v7.github.dev';
 
 function resolveCoverUrl(coverPath) {
     const path = coverPath || 'musics/default-cover.jpg';

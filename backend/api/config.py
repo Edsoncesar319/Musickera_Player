@@ -11,7 +11,8 @@ class Config:
         "http://localhost:3000",
         "http://localhost:5000",
         "https://musickera-player.vercel.app",
-        "https://*.vercel.app"
+        "https://*.vercel.app",
+        "https://automatic-giggle-wr97449prwrrc97v7.github.dev"
     ]
     
     # Configurações de diretórios

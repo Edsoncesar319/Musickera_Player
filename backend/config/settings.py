@@ -40,8 +40,9 @@ CORS_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:3000',
-    'http://127.0.0.1:8000',,
-    'https://musickera-plus.vercel.app'
+    'http://127.0.0.1:8000',
+    'https://musickera-plus.vercel.app',
+    'https://automatic-giggle-wr97449prwrrc97v7.github.dev'
 ]
 
 # Configurações de cache
