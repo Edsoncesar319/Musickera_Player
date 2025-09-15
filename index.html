@@ -29,6 +29,103 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        /* Loading Animation Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #262626;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: transparent;
+            border: 3px solid #3c3c3c;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 150px;
+            font-family: sans-serif;
+            font-size: 20px;
+            color: #06f52e;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #00ff2a;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .ring:before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top: 3px solid #00ff2a;
+            border-right: 3px solid #00ff2a;
+            border-radius: 50%;
+            animation: animateC 2s linear infinite;
+        }
+
+        .ring span {
+            display: block;
+            position: absolute;
+            top: calc(50% - 2px);
+            left: 50%;
+            width: 50%;
+            height: 4px;
+            background: transparent;
+            transform-origin: left;
+            animation: animate 2s linear infinite;
+        }
+
+        .ring span:before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00ff2a;
+            top: -6px;
+            right: -8px;
+            box-shadow: 0 0 20px #00ff2a;
+        }
+
+        @keyframes animateC {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes animate {
+            0% {
+                transform: rotate(45deg);
+            }
+            100% {
+                transform: rotate(405deg);
+            }
+        }
+
         .container {
             max-width: 100%;
             margin: 0;
@@ -599,36 +696,87 @@
             max-width: 1400px;
             margin: 0 auto;
             width: 100%;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Estilos para o modo zoom do player */
-        .player-section.zoomed {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            grid-template-columns: 1fr;
-            max-width: none;
-            padding: 40px;
-            display: flex;
+        /* Botão de alternar visualização */
+        .view-toggle {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 3;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 8px 10px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
-        .player-section.zoomed .player-container {
-            max-width: 800px;
+        .view-toggle:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: translateY(-1px);
+        }
+
+        .view-toggle .material-symbols-rounded { font-size: 20px; }
+
+        /* Modo visualização responsivo (ampliado) */
+        .player-section.view-mode {
+            grid-template-columns: 1fr;
+            max-width: 100vw;
             width: 100%;
-            transform: scale(1.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            padding: 12px;
+            gap: 16px;
+            position: relative;
         }
 
-        .player-section.zoomed .playlist {
-            display: none;
+        .player-section.view-mode .player-container {
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+            padding: 16px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+            transition: all 0.3s ease;
+        }
+
+        .player-section.view-mode .now-playing { gap: 20px; }
+
+        .player-section.view-mode .album-cover {
+            width: min(60vw, 520px);
+            height: min(60vw, 520px);
+        }
+
+        .player-section.view-mode .track-title { font-size: clamp(24px, 5vw, 56px); }
+        .player-section.view-mode .artist-name { font-size: clamp(16px, 2.8vw, 28px); }
+        .player-section.view-mode .album-name { font-size: clamp(14px, 2.2vw, 22px); }
+
+        .player-section.view-mode .controls .control-button { transform: scale(1.05); }
+        .player-section.view-mode .progress-container { height: 8px; }
+        .player-section.view-mode .volume-wrapper { margin-top: 8px; }
+
+        /* Responsividade adicional */
+        @media (max-width: 768px) {
+            .view-toggle { top: 8px; right: 8px; }
+            .player-section.view-mode .album-cover {
+                width: min(80vw, 380px);
+                height: min(80vw, 380px);
+            }
+            .player-section.view-mode .now-playing { flex-direction: column; align-items: center; }
+            .player-section.view-mode .track-info { align-items: center; }
+        }
+
+        @media (max-width: 480px) {
+            .player-section.view-mode .album-cover {
+                width: min(88vw, 320px);
+                height: min(88vw, 320px);
+            }
         }
 
         .player-container {
@@ -1166,43 +1314,124 @@
 
         .playlists-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
             margin-bottom: 20px;
         }
 
         .playlist-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 16px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .playlist-cover-container {
+            position: relative;
+            overflow: hidden;
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .playlist-cover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .playlist-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+            transform: translateY(-2px) scale(1.05);
         }
 
         .playlist-card.active {
-            background: rgba(29, 185, 84, 0.2);
-            border-color: #1DB954;
+            background: rgba(29, 185, 84, 0.1);
+            border: 2px solid #1DB954;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playlist-card.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(29, 185, 84, 0.05) 0%, rgba(29, 185, 84, 0.15) 100%);
+            z-index: 1;
+            animation: activeGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes activeGlow {
+            0% {
+                box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 30px rgba(29, 185, 84, 0.6), 0 0 40px rgba(29, 185, 84, 0.4);
+            }
+        }
+
+        .playlist-card.active .playlist-cover {
+            transform: scale(1.05);
+            filter: brightness(1.1) saturate(1.2);
+        }
+
+        .playlist-card.active h4,
+        .playlist-card.active .music-count {
+            position: relative;
+            z-index: 2;
+            color: #1DB954;
+            text-shadow: 0 0 10px rgba(29, 185, 84, 0.5);
+        }
+
+        .playlist-card.active .playlist-mini-cover {
+            border: 2px solid #1DB954;
+            box-shadow: 0 0 8px rgba(29, 185, 84, 0.6);
+            transform: scale(1.1);
         }
 
         .playlist-card h4 {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: #fff;
-            margin: 0 0 8px 0;
+            margin: 0 0 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .playlist-title-with-cover {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .playlist-mini-cover {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .playlist-card .music-count {
-            font-size: 12px;
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.6);
+        }
+
+        .playlist-card:hover .playlist-mini-cover {
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
         .playlist-selector {
@@ -1446,15 +1675,6 @@
 
             .player-section {
                 padding: 12px;
-            }
-
-            .player-section.zoomed {
-                padding: 20px;
-            }
-
-            .player-section.zoomed .player-container {
-                transform: scale(1.05);
-                max-width: 100%;
             }
 
             .player-container {
@@ -2064,6 +2284,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
 </head>
 <body>
+    <!-- Loading Animation -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="ring">Loading
+            <span></span>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>Musickêra</h1>
@@ -2127,9 +2354,12 @@
         </div>
 
         <div class="player-section">
+            <button class="view-toggle" id="viewToggleBtn" title="Ampliar / Modo Visualização">
+                <span class="material-symbols-rounded">fullscreen</span>
+            </button>
             <div class="player-container">
                 <div class="now-playing">
-                    <img src="/" alt="Album Cover" class="album-cover">
+                    <img src="musics/default-cover.jpg" alt="Album Cover" class="album-cover">
                     <div class="track-info">
                         <h2 class="track-title">Nome da Música</h2>
                         <p class="artist-name">Artista</p>
@@ -2160,9 +2390,6 @@
                     </button>
                     <button class="control-button" onclick="toggleRepeat()" id="repeatButton" title="Repetir">
                         <span id="repeatIcon" class="material-symbols-rounded">repeat</span>
-                    </button>
-                    <button class="control-button" onclick="toggleZoom()" id="zoomButton" title="Ampliar Player">
-                        <span id="zoomIcon" class="material-symbols-rounded">fullscreen</span>
                     </button>
                 </div>
 
@@ -2317,6 +2544,206 @@
         let audio = document.getElementById('playerAudio');
         let repeatMode = 'none'; // 'none', 'one', 'all'
 
+        // Base de API/backend para recursos (configurável via window.API_BASE_URL ou localStorage)
+        const API_BASE_URL = (typeof window !== 'undefined' && (window.API_BASE_URL || localStorage.getItem('API_BASE_URL'))) || 'http://localhost:5000';
+
+        // Loading Animation Control Functions
+        function showLoading() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('hidden');
+                loadingOverlay.style.display = 'flex';
+            }
+        }
+
+        function hideLoading() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.classList.add('hidden');
+                // Remove the overlay from DOM after animation completes
+                setTimeout(() => {
+                    if (loadingOverlay && loadingOverlay.classList.contains('hidden')) {
+                        loadingOverlay.style.display = 'none';
+                    }
+                }, 500); // Match the CSS transition duration
+            }
+        }
+
+        // Function to check if loading should be hidden when music is added
+        function checkAndHideLoadingIfMusicReady() {
+            if (playlist.length > 0 && currentTrack < playlist.length) {
+                const track = playlist[currentTrack];
+                if (track && track.file) {
+                    // If there's a current track with a file, loadTrack will handle hiding the loading
+                    return;
+                }
+            }
+            // If no music is ready, keep loading visible
+        }
+
+        // ===== SISTEMA DE FILAS DE TAREFAS EM SEGUNDO PLANO =====
+        
+        // Sistema de filas para operações não-críticas
+        const backgroundTaskQueue = {
+            tasks: [],
+            isProcessing: false,
+            maxConcurrentTasks: 2,
+            activeTasks: 0,
+            
+            // Adiciona tarefa à fila
+            addTask(task, priority = 'normal') {
+                const taskItem = {
+                    id: Date.now() + Math.random(),
+                    task,
+                    priority,
+                    addedAt: Date.now()
+                };
+                
+                if (priority === 'high') {
+                    this.tasks.unshift(taskItem);
+                } else {
+                    this.tasks.push(taskItem);
+                }
+                
+                this.processQueue();
+            },
+            
+            // Processa a fila de tarefas
+            async processQueue() {
+                if (this.isProcessing || this.activeTasks >= this.maxConcurrentTasks) {
+                    return;
+                }
+                
+                this.isProcessing = true;
+                
+                while (this.tasks.length > 0 && this.activeTasks < this.maxConcurrentTasks) {
+                    const taskItem = this.tasks.shift();
+                    this.activeTasks++;
+                    
+                    try {
+                        await taskItem.task();
+                    } catch (error) {
+                        console.error('Erro na tarefa em segundo plano:', error);
+                    } finally {
+                        this.activeTasks--;
+                    }
+                }
+                
+                this.isProcessing = false;
+                
+                // Continua processando se ainda há tarefas
+                if (this.tasks.length > 0) {
+                    setTimeout(() => this.processQueue(), 100);
+                }
+            },
+            
+            // Limpa a fila
+            clearQueue() {
+                this.tasks = [];
+            }
+        };
+
+        // Sistema de proteção de continuidade musical
+        const musicContinuityProtection = {
+            isPlaying: false,
+            currentTrackId: null,
+            protectionActive: false,
+            
+            // Ativa proteção durante operações críticas
+            activateProtection() {
+                this.protectionActive = true;
+                this.isPlaying = isPlaying;
+                this.currentTrackId = currentTrack;
+                console.log('🛡️ Proteção de continuidade musical ativada');
+            },
+            
+            // Desativa proteção
+            deactivateProtection() {
+                this.protectionActive = false;
+                console.log('🛡️ Proteção de continuidade musical desativada');
+            },
+            
+            // Verifica se deve pausar operações
+            shouldPauseOperations() {
+                return this.protectionActive && this.isPlaying;
+            },
+            
+            // Restaura estado de reprodução se necessário
+            restorePlaybackState() {
+                if (this.protectionActive && this.isPlaying && !isPlaying) {
+                    console.log('🔄 Restaurando estado de reprodução');
+                    togglePlay();
+                }
+            }
+        };
+
+        // Sistema de atualizações de UI diferidas
+        const deferredUIUpdates = {
+            pendingUpdates: new Set(),
+            updateTimeout: null,
+            
+            // Agenda atualização de UI
+            scheduleUpdate(updateFunction, delay = 100) {
+                this.pendingUpdates.add(updateFunction);
+                
+                if (this.updateTimeout) {
+                    clearTimeout(this.updateTimeout);
+                }
+                
+                this.updateTimeout = setTimeout(() => {
+                    this.executePendingUpdates();
+                }, delay);
+            },
+            
+            // Executa todas as atualizações pendentes
+            executePendingUpdates() {
+                if (this.pendingUpdates.size === 0) return;
+                
+                console.log(`🎨 Executando ${this.pendingUpdates.size} atualizações de UI`);
+                
+                this.pendingUpdates.forEach(updateFunction => {
+                    try {
+                        updateFunction();
+                    } catch (error) {
+                        console.error('Erro na atualização de UI:', error);
+                    }
+                });
+                
+                this.pendingUpdates.clear();
+                this.updateTimeout = null;
+            },
+            
+            // Força execução imediata
+            forceUpdate() {
+                if (this.updateTimeout) {
+                    clearTimeout(this.updateTimeout);
+                }
+                this.executePendingUpdates();
+            }
+        };
+
+        // Show loading on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Keep loading visible until music is loaded
+            // Loading will be hidden by loadTrack() when music is ready
+        });
+
+        function resolveCoverUrl(coverPath) {
+            const path = coverPath || 'musics/default-cover.jpg';
+            if (!path) return '';
+            const lower = String(path).toLowerCase();
+            if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:') || lower.startsWith('blob:')) {
+                return path;
+            }
+            const normalized = path.startsWith('/') ? path : `/${path}`;
+            if (normalized.startsWith('/musics/')) {
+                const fullUrl = `${API_BASE_URL}${normalized}`;
+                console.log(`🔗 Resolvendo cover URL: ${path} -> ${fullUrl}`);
+                return fullUrl;
+            }
+            return path;
+        }
+
         // Configuração do IndexedDB
         const dbName = 'MusickeraDB';
         const dbVersion = 2;
@@ -2378,41 +2805,16 @@
             });
         }
 
-        // Função otimizada para carregar todas as músicas do banco de dados
+        // Função para carregar todas as músicas do banco de dados
         async function loadMusicsFromDB() {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(['musics'], 'readonly');
                 const store = transaction.objectStore('musics');
+                const request = store.getAll();
                 
-                // Usa cursor para melhor performance com grandes volumes de dados
-                const request = store.openCursor();
-                const results = [];
-                
-                request.onsuccess = (event) => {
-                    const cursor = event.target.result;
-                    if (cursor) {
-                        // Carrega apenas campos essenciais para melhor performance
-                        const music = {
-                            id: cursor.value.id,
-                            title: cursor.value.title,
-                            artist: cursor.value.artist,
-                            album: cursor.value.album,
-                            cover: cursor.value.cover,
-                            duration: cursor.value.duration,
-                            fileName: cursor.value.fileName,
-                            fileType: cursor.value.fileType,
-                            file: cursor.value.file,
-                            source: cursor.value.source,
-                            deezerId: cursor.value.deezerId,
-                            youtubeId: cursor.value.youtubeId,
-                            year: cursor.value.year
-                        };
-                        results.push(music);
-                        cursor.continue();
-                    } else {
-                        console.log(`Músicas carregadas do banco de dados: ${results.length}`);
-                        resolve(results);
-                    }
+                request.onsuccess = () => {
+                    console.log('Músicas carregadas do banco de dados');
+                    resolve(request.result);
                 };
                 
                 request.onerror = (event) => {
@@ -2642,33 +3044,29 @@
             document.querySelector('.track-title').textContent = track.title;
             document.querySelector('.artist-name').textContent = track.artist;
             document.querySelector('.album-name').textContent = track.album;
-            
-            // Implementa cache de imagens de capa
-            const albumCover = document.querySelector('.album-cover');
-            if (albumCover && track.cover && track.cover !== 'musics/default-cover.jpg') {
-                // Verifica cache de imagem
-                const cachedCover = getCachedCover(track.fileName || track.title);
-                if (cachedCover) {
-                    albumCover.src = cachedCover;
-                    console.log('Usando capa do cache:', track.fileName || track.title);
-                } else {
-                    albumCover.src = track.cover;
-                    // Cache a imagem após carregar
-                    albumCover.onload = () => {
-                        setCachedCover(track.fileName || track.title, track.cover);
-                    };
-                }
-                
-                // Aplica borda neon na capa do álbum
-                applyNeonBorder(albumCover, track.cover);
-            } else if (albumCover) {
-                albumCover.src = track.cover || 'musics/default-cover.jpg';
+            const coverEl = document.querySelector('.album-cover');
+            if (coverEl) {
+                coverEl.classList.add('cover-loading');
+                const newSrc = resolveCoverUrl(track.cover);
+                coverEl.onload = () => {
+                    coverEl.classList.remove('cover-loading');
+                };
+                coverEl.onerror = () => {
+                    coverEl.src = resolveCoverUrl('musics/default-cover.jpg');
+                    coverEl.classList.remove('cover-loading');
+                };
+                coverEl.src = newSrc;
+                coverEl.alt = `${track.title} - ${track.artist}`;
             }
-            
-            albumCover.alt = `${track.title} - ${track.artist}`;
             document.querySelector('.duration').textContent = track.duration;
             const yearEl = document.querySelector('.Ano');
             if (yearEl) yearEl.textContent = track.year ? `Ano: ${track.year}` : '';
+            
+            // Aplica borda neon na capa do álbum
+            const albumCover = document.querySelector('.album-cover');
+            if (albumCover && track.cover && track.cover !== 'musics/default-cover.jpg') {
+                applyNeonBorder(albumCover, resolveCoverUrl(track.cover));
+            }
             
             // Atualiza a lista de reprodução
             const trackItems = document.querySelectorAll('.track-item');
@@ -2706,7 +3104,7 @@
                 const playerContainer = document.querySelector('.player-container');
                 const embedHtml = `
                     <div class="now-playing">
-                        <img src="${track.cover}" alt="${track.title}" class="album-cover">
+                        <img src="${resolveCoverUrl(track.cover)}" alt="${track.title}" class="album-cover">
                         <div class="track-info">
                             <h2 class="track-title">${track.title}</h2>
                             <p class="artist-name">${track.artist}</p>
@@ -2726,7 +3124,7 @@
                 const playerContainer = document.querySelector('.player-container');
                 const embedHtml = `
                     <div class="now-playing">
-                        <img src="${track.cover}" alt="${track.title}" class="album-cover">
+                        <img src="${resolveCoverUrl(track.cover)}" alt="${track.title}" class="album-cover">
                         <div class="track-info">
                             <h2 class="track-title">${track.title}</h2>
                             <p class="artist-name">${track.artist}</p>
@@ -2762,23 +3160,15 @@
                         return;
                     }
 
-                    // Implementa lazy loading para Blob URLs
+                    // Cria URL do blob se necessário
                     if (!track.file && track.fileArrayBuffer) {
                         try {
-                            // Verifica cache primeiro
-                            const cachedUrl = getCachedBlobUrl(track.fileName);
-                            if (cachedUrl) {
-                                track.file = cachedUrl;
-                                console.log('Usando Blob URL do cache:', track.fileName);
-                            } else {
-                                console.log('Criando novo blob URL para:', track.fileName);
-                                const blob = new Blob([track.fileArrayBuffer], { 
-                                    type: track.fileType || 'audio/mpeg' 
-                                });
-                                track.file = URL.createObjectURL(blob);
-                                setCachedBlobUrl(track.fileName, track.file);
-                                console.log('Blob URL criado e cacheado:', track.file);
-                            }
+                            console.log('Criando blob URL para:', track.fileName);
+                            const blob = new Blob([track.fileArrayBuffer], { 
+                                type: track.fileType || 'audio/mpeg' 
+                            });
+                            track.file = URL.createObjectURL(blob);
+                            console.log('Blob URL criado:', track.file);
                         } catch (e) {
                             console.error('Falha ao criar URL do blob para a faixa:', e);
                             alert('Erro ao processar o arquivo de música. Tente fazer upload novamente.');
@@ -2985,19 +3375,31 @@
 
         // Atualiza a função updatePlaylistHTML para usar o valor atual da busca
         function updatePlaylistHTML() {
-            if (window.__renderScheduled) return;
-            window.__renderScheduled = true;
-            requestAnimationFrame(() => {
-                window.__renderScheduled = false;
+            // Usa sistema de atualizações diferidas para não interromper reprodução
+            deferredUIUpdates.scheduleUpdate(() => {
+                if (window.__renderScheduled) return;
+                window.__renderScheduled = true;
+                requestAnimationFrame(() => {
+                    window.__renderScheduled = false;
                 const trackList = document.querySelector('.track-list');
                 const clearButton = document.querySelector('.clear-playlist');
+                const viewToggleBtn = document.getElementById('viewToggleBtn');
+                if (viewToggleBtn && !viewToggleBtn.__bound) {
+                    viewToggleBtn.addEventListener('click', () => {
+                        const playerSection = document.querySelector('.player-section');
+                        const icon = viewToggleBtn.querySelector('.material-symbols-rounded');
+                        const isViewMode = playerSection.classList.toggle('view-mode');
+                        icon.textContent = isViewMode ? 'fullscreen_exit' : 'fullscreen';
+                    });
+                    viewToggleBtn.__bound = true;
+                }
                 
                 // Atualiza a lista de músicas
                 trackList.innerHTML = playlist.map((track, index) => `
                     <li class="track-item ${index === currentTrack ? 'active' : ''}" 
                         onclick="playTrack(${index})">
                         <span class="track-number">${(index + 1).toString().padStart(2, '0')}</span>
-                        <img src="${track.cover || 'musics/default-cover.jpg'}" loading="lazy" alt="capa" style="width:40px;height:40px;border-radius:6px;object-fit:cover;margin-right:8px;">
+                        <img src="${resolveCoverUrl(track.cover || 'musics/default-cover.jpg')}" loading="lazy" alt="capa" class="track-cover cover-loading" style="width:40px;height:40px;border-radius:6px;object-fit:cover;margin-right:8px;">
                         <div class="track-info-small">
                             <div class="track-title-small">${track.title}</div>
                             <div class="artist-name-small">${track.artist}</div>
@@ -3007,6 +3409,16 @@
                     </li>
                 `).join('');
                 
+                // Remove estado de loading das capas ao carregar/erro
+                const covers = trackList.querySelectorAll('img.track-cover');
+                covers.forEach(img => {
+                    img.addEventListener('load', () => img.classList.remove('cover-loading'));
+                    img.addEventListener('error', () => {
+                        img.src = resolveCoverUrl('musics/default-cover.jpg');
+                        img.classList.remove('cover-loading');
+                    });
+                });
+
                 // Mostra ou esconde o botão de limpar playlist
                 clearButton.style.display = playlist.length > 0 ? 'block' : 'none';
                 
@@ -3014,12 +3426,13 @@
                 playlist.forEach((track, index) => {
                     const trackItem = trackList.children[index];
                     if (trackItem && track.cover && track.cover !== 'musics/default-cover.jpg') {
-                        applyNeonBorder(trackItem, track.cover);
+                        applyNeonBorder(trackItem, resolveCoverUrl(track.cover));
                     }
                 });
                 
                 adjustFontSize();
-            });
+                });
+            }, 50); // Delay reduzido para responsividade
         }
 
         // Função para formatar a duração da música
@@ -3108,14 +3521,21 @@
         });
 
         audio.addEventListener('ended', function() {
+            // Usa sistema de proteção para transições suaves
             if (repeatMode === 'one') {
                 audio.currentTime = 0;
                 audio.play();
             } else if (repeatMode === 'all') {
-                nextTrack();
+                // Agenda próxima faixa em segundo plano para não interromper
+                backgroundTaskQueue.addTask(() => {
+                    nextTrack();
+                }, 'high');
             } else {
                 if (currentTrack < playlist.length - 1) {
-                    nextTrack();
+                    // Agenda próxima faixa em segundo plano para não interromper
+                    backgroundTaskQueue.addTask(() => {
+                        nextTrack();
+                    }, 'high');
                 }
             }
         });
@@ -3250,6 +3670,11 @@
                 return;
             }
             
+            // Ativa proteção de continuidade quando inicia reprodução
+            if (!isPlaying) {
+                musicContinuityProtection.activateProtection();
+            }
+            
             if (track.source === 'deezer') {
                 // Para músicas do Deezer, recarrega o iframe com o novo estado de autoplay
                 loadTrack();
@@ -3262,6 +3687,8 @@
                         audio.pause();
                         const icon = document.getElementById('playPauseIcon');
                         if (icon) icon.textContent = 'play_arrow';
+                        // Desativa proteção quando pausa
+                        musicContinuityProtection.deactivateProtection();
                     } else {
                         // Verifica se o áudio está pronto para reprodução
                         if (audio.readyState < 2) {
@@ -3271,12 +3698,14 @@
                                 audio.play().catch(error => {
                                     console.error('Erro ao reproduzir áudio:', error);
                                     alert('Erro ao reproduzir a música. Verifique se o arquivo existe.');
+                                    musicContinuityProtection.deactivateProtection();
                                 });
                             });
                         } else {
                             audio.play().catch(error => {
                                 console.error('Erro ao reproduzir áudio:', error);
                                 alert('Erro ao reproduzir a música. Verifique se o arquivo existe.');
+                                musicContinuityProtection.deactivateProtection();
                             });
                         }
                         const icon = document.getElementById('playPauseIcon');
@@ -3285,6 +3714,7 @@
                 } catch (error) {
                     console.error('Erro ao controlar reprodução:', error);
                     alert('Erro ao controlar a reprodução da música.');
+                    musicContinuityProtection.deactivateProtection();
                 }
             }
             isPlaying = !isPlaying;
@@ -3373,7 +3803,7 @@
                 const playerContainer = document.querySelector('.player-container');
                 const embedHtml = `
                     <div class="now-playing">
-                        <img src="${track.cover}" alt="${track.title}" class="album-cover">
+                        <img src="${resolveCoverUrl(track.cover)}" alt="${track.title}" class="album-cover">
                         <div class="track-info">
                             <h2 class="track-title">${track.title}</h2>
                             <p class="artist-name">${track.artist}</p>
@@ -3388,12 +3818,16 @@
                     </div>
                 `;
                 playerContainer.innerHTML = embedHtml;
+                // Para Deezer, esconde o loading após um pequeno delay
+                setTimeout(() => {
+                    hideLoading();
+                }, 1000);
             } else if (track.source === 'youtube') {
                 // For YouTube Music, create an embedded player
                 const playerContainer = document.querySelector('.player-container');
                 const embedHtml = `
                     <div class="now-playing">
-                        <img src="${track.cover}" alt="${track.title}" class="album-cover">
+                        <img src="${resolveCoverUrl(track.cover)}" alt="${track.title}" class="album-cover">
                         <div class="track-info">
                             <h2 class="track-title">${track.title}</h2>
                             <p class="artist-name">${track.artist}</p>
@@ -3411,15 +3845,37 @@
                     </div>
                 `;
                 playerContainer.innerHTML = embedHtml;
+                // Para YouTube, esconde o loading após um pequeno delay
+                setTimeout(() => {
+                    hideLoading();
+                }, 1000);
             } else {
                 // Para músicas locais, usa o player padrão
                 audio.src = track.file;
                 audio.load();
                 updatePlayerInfo(track);
+                
+                // Adiciona event listeners para detectar quando a música está pronta
+                const onCanPlay = () => {
+                    hideLoading();
+                    audio.removeEventListener('canplay', onCanPlay);
+                    audio.removeEventListener('error', onError);
+                };
+                
+                const onError = () => {
+                    hideLoading();
+                    audio.removeEventListener('canplay', onCanPlay);
+                    audio.removeEventListener('error', onError);
+                };
+                
+                audio.addEventListener('canplay', onCanPlay);
+                audio.addEventListener('error', onError);
+                
                 if (isPlaying) {
                     audio.play().catch(error => {
                         console.error('Erro ao reproduzir áudio:', error);
                         alert('Erro ao reproduzir a música. Verifique se o arquivo existe e o formato é suportado (.mp3/.m4a/.webm).');
+                        hideLoading();
                     });
                 }
             }
@@ -3559,136 +4015,16 @@
         let isUpdating = false;
         let updateQueue = [];
 
-        // Sistema de cache para melhorar performance
-        const metadataCache = new Map();
-        const coverCache = new Map();
-        const blobUrlCache = new Map();
-        const processingCache = new Set();
-        
-        // Configurações de performance
-        const PERFORMANCE_CONFIG = {
-            batchSize: {
-                initial: 20,
-                playlist: 10,
-                changes: 5,
-                dynamic: true // Ajusta automaticamente baseado na performance
-            },
-            cache: {
-                maxSize: 1000,
-                ttl: 300000 // 5 minutos
-            },
-            lazy: {
-                enabled: true,
-                threshold: 50 // Carrega Blob URLs apenas quando necessário
-            }
-        };
-
-        // Funções de cache inteligente
-        function getCachedMetadata(fileName) {
-            const cached = metadataCache.get(fileName);
-            if (cached && Date.now() - cached.timestamp < PERFORMANCE_CONFIG.cache.ttl) {
-                return cached.data;
-            }
-            metadataCache.delete(fileName);
-            return null;
-        }
-
-        function setCachedMetadata(fileName, metadata) {
-            if (metadataCache.size >= PERFORMANCE_CONFIG.cache.maxSize) {
-                // Remove o item mais antigo
-                const oldestKey = metadataCache.keys().next().value;
-                metadataCache.delete(oldestKey);
-            }
-            metadataCache.set(fileName, {
-                data: metadata,
-                timestamp: Date.now()
-            });
-        }
-
-        function getCachedCover(fileName) {
-            const cached = coverCache.get(fileName);
-            if (cached && Date.now() - cached.timestamp < PERFORMANCE_CONFIG.cache.ttl) {
-                return cached.data;
-            }
-            coverCache.delete(fileName);
-            return null;
-        }
-
-        function setCachedCover(fileName, cover) {
-            if (coverCache.size >= PERFORMANCE_CONFIG.cache.maxSize) {
-                const oldestKey = coverCache.keys().next().value;
-                coverCache.delete(oldestKey);
-            }
-            coverCache.set(fileName, {
-                data: cover,
-                timestamp: Date.now()
-            });
-        }
-
-        function getCachedBlobUrl(fileName) {
-            return blobUrlCache.get(fileName);
-        }
-
-        function setCachedBlobUrl(fileName, blobUrl) {
-            if (blobUrlCache.size >= PERFORMANCE_CONFIG.cache.maxSize) {
-                const oldestKey = blobUrlCache.keys().next().value;
-                const oldUrl = blobUrlCache.get(oldestKey);
-                if (oldUrl) URL.revokeObjectURL(oldUrl);
-                blobUrlCache.delete(oldestKey);
-            }
-            blobUrlCache.set(fileName, blobUrl);
-        }
-
-        // Função para ajustar tamanho de lote dinamicamente
-        function getDynamicBatchSize(type, totalItems) {
-            const baseSize = PERFORMANCE_CONFIG.batchSize[type] || 10;
-            if (!PERFORMANCE_CONFIG.batchSize.dynamic) return baseSize;
-            
-            // Ajusta baseado no número total de itens
-            if (totalItems > 1000) return Math.max(5, baseSize / 2);
-            if (totalItems > 500) return Math.max(8, baseSize * 0.8);
-            if (totalItems < 50) return Math.min(20, baseSize * 1.5);
-            
-            return baseSize;
-        }
-
-        // Função para limpeza automática de cache
-        function cleanupCache() {
-            const now = Date.now();
-            
-            // Limpa cache de metadados expirados
-            for (const [key, value] of metadataCache.entries()) {
-                if (now - value.timestamp > PERFORMANCE_CONFIG.cache.ttl) {
-                    metadataCache.delete(key);
-                }
-            }
-            
-            // Limpa cache de capas expiradas
-            for (const [key, value] of coverCache.entries()) {
-                if (now - value.timestamp > PERFORMANCE_CONFIG.cache.ttl) {
-                    coverCache.delete(key);
-                }
-            }
-            
-            // Limpa cache de Blob URLs não utilizados
-            if (blobUrlCache.size > PERFORMANCE_CONFIG.cache.maxSize) {
-                const entries = Array.from(blobUrlCache.entries());
-                const toRemove = entries.slice(0, entries.length - PERFORMANCE_CONFIG.cache.maxSize);
-                toRemove.forEach(([key, url]) => {
-                    URL.revokeObjectURL(url);
-                    blobUrlCache.delete(key);
-                });
-            }
-            
-            console.log('🧹 Cache limpo automaticamente');
-        }
-
-        // Configura limpeza automática de cache a cada 5 minutos
-        setInterval(cleanupCache, 300000);
-
-        // Função otimizada para verificar mudanças
+        // Função otimizada para verificar mudanças com proteção de continuidade
         async function checkMusicChanges() {
             if (isUpdating) return;
+            
+            // Se está tocando música, agenda para depois
+            if (isPlaying) {
+                console.log('🎵 Música tocando, agendando verificação de mudanças para depois');
+                backgroundTaskQueue.addTask(checkMusicChanges, 'low');
+                return;
+            }
             
             try {
                 const url = currentPlaylist 
@@ -3704,7 +4040,10 @@
 
                 if (data.changes && data.changes.length > 0) {
                     console.log(`${data.changes.length} mudanças detectadas`);
-                    await processMusicChanges(data.changes);
+                    // Processa mudanças em segundo plano para não interromper reprodução
+                    backgroundTaskQueue.addTask(async () => {
+                        await processMusicChanges(data.changes);
+                    }, 'normal');
                 }
                 
                 lastCheckTime = data.current_time || Date.now() / 1000;
@@ -3888,6 +4227,14 @@
         // Função para atualizar a lista de músicas (mantida para compatibilidade)
         async function updateMusicList() {
             console.log('🔄 [PRIORIDADE 4] Atualização manual solicitada');
+            
+            // Se está tocando música, agenda para depois
+            if (isPlaying) {
+                console.log('🎵 Música tocando, agendando atualização para depois');
+                backgroundTaskQueue.addTask(updateMusicList, 'normal');
+                return;
+            }
+            
             await checkMusicChanges();
         }
         
@@ -3970,39 +4317,8 @@
             }
         }
 
-        // Função para alternar zoom do player
-        function toggleZoom() {
-            const playerSection = document.querySelector('.player-section');
-            const zoomButton = document.getElementById('zoomButton');
-            const zoomIcon = document.getElementById('zoomIcon');
-            
-            if (playerSection.classList.contains('zoomed')) {
-                // Reduzir o player
-                playerSection.classList.remove('zoomed');
-                zoomIcon.textContent = 'fullscreen';
-                zoomButton.title = 'Ampliar Player';
-                document.body.style.overflow = 'auto';
-            } else {
-                // Ampliar o player
-                playerSection.classList.add('zoomed');
-                zoomIcon.textContent = 'fullscreen_exit';
-                zoomButton.title = 'Reduzir Player';
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
         // Adiciona o evento de redimensionamento
         window.addEventListener('resize', adjustFontSize);
-
-        // Adiciona o evento para fechar zoom com ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const playerSection = document.querySelector('.player-section');
-                if (playerSection && playerSection.classList.contains('zoomed')) {
-                    toggleZoom();
-                }
-            }
-        });
 
         // Função para salvar a playlist no localStorage
         function savePlaylist() {
@@ -4077,7 +4393,7 @@
                 document.querySelector('.track-title').textContent = "Nenhuma música";
                 document.querySelector('.artist-name').textContent = "";
                 document.querySelector('.album-name').textContent = "";
-                document.querySelector('.album-cover').src = "musics/default-cover.jpg";
+                document.querySelector('.album-cover').src = resolveCoverUrl('musics/default-cover.jpg');
                 document.querySelector('.progress-bar').style.width = "0%";
                 document.querySelector('.current-time').textContent = "0:00";
                 document.querySelector('.duration').textContent = "0:00";
@@ -4101,7 +4417,7 @@
                     document.querySelector('.track-title').textContent = "Nenhuma música";
                     document.querySelector('.artist-name').textContent = "";
                     document.querySelector('.album-name').textContent = "";
-                    document.querySelector('.album-cover').src = "musics/default-cover.jpg";
+                    document.querySelector('.album-cover').src = resolveCoverUrl('musics/default-cover.jpg');
                     document.querySelector('.progress-bar').style.width = "0%";
                     document.querySelector('.current-time').textContent = "0:00";
                     document.querySelector('.duration').textContent = "0:00";
@@ -4119,49 +4435,21 @@
                 const musics = await loadMusicsFromDB();
                 playlist.length = 0;
                 
-                // Usa tamanho de lote dinâmico baseado na quantidade de músicas
-                const batchSize = getDynamicBatchSize('initial', musics.length);
-                console.log(`📊 Usando tamanho de lote dinâmico: ${batchSize} para ${musics.length} músicas`);
-                
+                // Processa músicas em lotes para melhor performance
+                const batchSize = 20;
                 for (let i = 0; i < musics.length; i += batchSize) {
                     const batch = musics.slice(i, i + batchSize);
                     
-                    // Processa o lote em paralelo para melhor performance
-                    const processedBatch = await Promise.allSettled(
-                        batch.map(async (music) => {
-                            // Verifica cache antes de processar
-                            const cachedMetadata = getCachedMetadata(music.fileName);
-                            if (cachedMetadata) {
-                                return { ...music, ...cachedMetadata };
-                            }
-                            
-                            // Adia a criação de Blob URL para o momento da reprodução
-                            music.fileArrayBuffer = music.file;
-                            delete music.file;
-                            
-                            // Cache os metadados para uso futuro
-                            setCachedMetadata(music.fileName, {
-                                title: music.title,
-                                artist: music.artist,
-                                album: music.album,
-                                cover: music.cover
-                            });
-                            
-                            return music;
-                        })
-                    );
+                    for (const music of batch) {
+                        // Adia a criação de Blob URL para o momento da reprodução
+                        music.fileArrayBuffer = music.file;
+                        delete music.file;
+                        playlist.push(music);
+                    }
                     
-                    // Adiciona apenas os itens processados com sucesso
-                    processedBatch.forEach(result => {
-                        if (result.status === 'fulfilled') {
-                            playlist.push(result.value);
-                        }
-                    });
-                    
-                    // Pausa adaptativa baseada no tamanho do lote
+                    // Pequena pausa entre lotes para não travar a interface
                     if (i + batchSize < musics.length) {
-                        const pauseTime = Math.max(5, batchSize * 0.5);
-                        await new Promise(resolve => setTimeout(resolve, pauseTime));
+                        await new Promise(resolve => setTimeout(resolve, 10));
                     }
                 }
                 
@@ -4172,40 +4460,67 @@
                 if (playlist.length > 0) {
                     currentTrack = 0;
                     loadTrack();
+                } else {
+                    // Se não há músicas, esconde o loading
+                    hideLoading();
                 }
             } catch (error) {
                 console.error('Erro ao carregar playlist do banco de dados:', error);
+                hideLoading(); // Hide loading on error
             }
         }
 
         // ===== SISTEMA DE INICIALIZAÇÃO COM HIERARQUIA DE PRIORIDADES =====
         
-        // Função principal de inicialização que respeita a hierarquia
+        // Função principal de inicialização otimizada
         async function initializePlayerWithPriorities() {
-            console.log('🚀 Iniciando player com hierarquia de prioridades...');
+            console.log('🚀 Iniciando player com hierarquia otimizada...');
+            showLoading();
             
             try {
-                // PRIORIDADE 1: Funções críticas (sequencial)
-                console.log('📋 Executando PRIORIDADE 1: Funções críticas');
+                // PRIORIDADE 1: Funções críticas (sequencial) - MÚSICA PRIMEIRO
+                console.log('📋 Executando PRIORIDADE 1: Funções críticas para reprodução');
                 await initDB();
                 await loadPlaylistFromDB();
                 
-                // PRIORIDADE 2: Funções importantes (paralelo)
-                console.log('📋 Executando PRIORIDADE 2: Funções importantes');
-                await Promise.all([
-                    loadPlaylists(),
-                    initialChangeCheck()
-                ]);
+                // Se há música, carrega imediatamente para reprodução
+                if (playlist.length > 0) {
+                    currentTrack = 0;
+                    loadTrack();
+                    console.log('🎵 Música carregada e pronta para reprodução');
+                } else {
+                    hideLoading();
+                }
                 
-                // PRIORIDADE 3: Configuração de manutenção
-                console.log('📋 Configurando PRIORIDADE 3: Sistema de manutenção');
-                // Atualiza a lista de músicas a cada 10 segundos
-                setInterval(checkMusicChanges, 10000);
+                // PRIORIDADE 2: Funções em segundo plano (não bloqueiam reprodução)
+                console.log('📋 Agendando PRIORIDADE 2: Tarefas em segundo plano');
+                backgroundTaskQueue.addTask(async () => {
+                    await loadPlaylists();
+                }, 'normal');
                 
-                console.log('✅ Player inicializado com sucesso!');
+                backgroundTaskQueue.addTask(async () => {
+                    await initialChangeCheck();
+                }, 'normal');
+                
+                // PRIORIDADE 3: Sistema de manutenção (em segundo plano)
+                console.log('📋 Configurando PRIORIDADE 3: Sistema de manutenção em segundo plano');
+                backgroundTaskQueue.addTask(async () => {
+                    setInterval(() => {
+                        // Só verifica mudanças se não estiver tocando música
+                        if (!isPlaying) {
+                            checkMusicChanges();
+                        } else {
+                            // Se estiver tocando, agenda para depois
+                            backgroundTaskQueue.addTask(checkMusicChanges, 'low');
+                        }
+                    }, 15000); // Aumentado para 15s para reduzir interferência
+                }, 'low');
+                
+                console.log('✅ Player inicializado com sucesso! Música protegida contra interrupções.');
                 
             } catch (error) {
                 console.error('❌ Erro na inicialização do player:', error);
+                hideLoading();
             }
         }
         
@@ -4248,6 +4563,7 @@
             const progressBar = document.getElementById('downloadProgressBar');
             progressBar.style.display = 'none';
             downloadProgress.isActive = false;
+            hideLoading(); // Hide loading animation when download progress is hidden
         }
         
         // Função para inicializar o progresso de download
@@ -4434,6 +4750,7 @@
 
             searchResults.innerHTML = '<div class="search-loading">Buscando...</div>';
             searchResults.style.display = 'block';
+            showLoading(); // Show loading animation during search
 
             try {
                 let results = [];
@@ -4479,6 +4796,8 @@
             } catch (error) {
                 console.error('Erro na busca:', error);
                 searchResults.innerHTML = '<div class="search-error">Erro ao buscar resultados</div>';
+            } finally {
+                hideLoading(); // Hide loading animation after search completes
             }
         }
 
@@ -4597,6 +4916,7 @@
             
             try {
                 importYtBtn.disabled = true;
+                showLoading(); // Show loading animation
                 
                 // Primeiro, extrai o nome da playlist
                 const extractResp = await fetch('http://localhost:5000/extract_playlist_name', {
@@ -4680,6 +5000,7 @@
                 console.error(err);
                 alert('Falha ao comunicar com o servidor. Certifique-se de que o backend está rodando.');
             } finally {
+                hideLoading(); // Hide loading animation
                 importYtBtn.disabled = false;
             }
         });
@@ -4687,7 +5008,7 @@
         // Função para obter as playlists existentes
         async function getExistingPlaylists() {
             try {
-                const resp = await fetch('http://localhost:5000/list_playlists');
+                const resp = await fetch(`${API_BASE_URL}/list_playlists`);
                 const data = await resp.json().catch(() => ({}));
                 if (resp.ok && data.playlists) {
                     return data.playlists.map(p => p.name);
@@ -4707,12 +5028,14 @@
                 try {
                     syncBtn.disabled = true;
                     syncBtn.innerHTML = '<span>⏳</span> Sincronizando...';
+                    showLoading(); // Show loading animation
                     await updateMusicList();
                     alert('Sincronização concluída.');
                 } catch (e) {
                     console.error('Erro ao sincronizar:', e);
                     alert('Erro ao sincronizar.');
                 } finally {
+                    hideLoading(); // Hide loading animation
                     syncBtn.disabled = false;
                     syncBtn.innerHTML = originalHtml;
                 }
@@ -4732,6 +5055,9 @@
                     alert('Carregamento já está em andamento. Aguarde a conclusão.');
                     return;
                 }
+                
+                // Show loading animation
+                showLoading();
                 
                 // Inicia o carregamento automático
                 startAutoLoadAllPlaylists();
@@ -5224,7 +5550,7 @@
         async function loadPlaylists() {
             try {
                 console.log('🔄 [PRIORIDADE 2] Carregando lista de playlists...');
-                const response = await fetch('http://localhost:5000/list_playlists');
+                const response = await fetch(`${API_BASE_URL}/list_playlists`);
                 const data = await response.json();
                 
                 if (data.error) {
@@ -5267,17 +5593,38 @@
         // Função para atualizar a lista de playlists na interface
         function updatePlaylistsList() {
             const playlistsList = document.getElementById('playlistsList');
-            if (!playlistsList) return;
+            if (!playlistsList) {
+                console.error('❌ Elemento playlistsList não encontrado!');
+                return;
+            }
 
+            console.log('🔄 Atualizando lista de playlists:', allPlaylists);
             playlistsList.innerHTML = '';
+
+            if (allPlaylists.length === 0) {
+                playlistsList.innerHTML = '<div style="text-align:center;color:#666;padding:20px;">Nenhuma playlist encontrada</div>';
+                return;
+            }
 
             allPlaylists.forEach(playlist => {
                 const playlistCard = document.createElement('div');
-                playlistCard.className = `playlist-card ${playlist.name === currentPlaylist ? 'active' : ''}`;
+                const isActive = playlist.name === currentPlaylist;
+                playlistCard.className = `playlist-card ${isActive ? 'active' : ''}`;
                 playlistCard.onclick = () => loadPlaylist(playlist.name);
                 
+                const coverUrl = resolveCoverUrl(playlist.cover || 'musics/default-cover.jpg');
+                console.log(`📸 Cover URL para ${playlist.name}:`, coverUrl);
+                
                 playlistCard.innerHTML = `
-                    <h4>${playlist.name}</h4>
+                    <div class="playlist-cover-container">
+                        <img class="playlist-cover" src="${coverUrl}" alt="${playlist.name}" style="width:100%;height:100%;object-fit:cover;display:block;transition:all 0.3s ease;" onerror="console.error('Erro ao carregar imagem:', this.src); this.src='${resolveCoverUrl('musics/default-cover.jpg')}'">
+                        ${isActive ? '<div style="position:absolute;top:4px;right:4px;background:rgba(29,185,84,0.9);color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;">▶</div>' : ''}
+                    </div>
+                    <h4>
+                        <div class="playlist-title-with-cover">
+                            <span>${playlist.name}</span>
+                        </div>
+                    </h4>
                     <div class="music-count">${playlist.music_count} música${playlist.music_count !== 1 ? 's' : ''}</div>
                 `;
                 
@@ -5312,7 +5659,7 @@
                 currentPlaylistTitle.textContent = playlistName || 'Todas as músicas';
             }
 
-            // Atualiza a interface das playlists
+            // Atualiza a interface das playlists para destacar a ativa
             updatePlaylistsList();
 
             // Se for uma playlist específica, atualiza o progresso
@@ -5417,6 +5764,22 @@
                     }
                 }
 
+                // Infere metadados básicos a partir do nome do arquivo quando ausentes
+                let inferredTitle = 'Desconhecido';
+                let inferredArtist = 'Desconhecido';
+                try {
+                    const base = (music.name || '').replace(/\.[^.]+$/, '');
+                    if (base.includes(' - ')) {
+                        const parts = base.split(' - ');
+                        if (parts.length >= 2) {
+                            inferredArtist = (parts[0] || '').trim() || inferredArtist;
+                            inferredTitle = (parts.slice(1).join(' - ') || '').trim() || inferredTitle;
+                        }
+                    } else {
+                        inferredTitle = base || inferredTitle;
+                    }
+                } catch (e) { /* noop */ }
+
                 // Baixa o arquivo e salva no IndexedDB
                 const response = await fetch(`http://localhost:5000${music.path}`);
                 if (!response.ok) {
@@ -5431,9 +5794,9 @@
                 }
                 
                 const musicRecord = {
-                    title: music.title || 'Desconhecido',
-                    artist: music.artist || 'Desconhecido',
-                    album: music.album || 'Desconhecido',
+                    title: (music.title && music.title.trim()) || inferredTitle,
+                    artist: (music.artist && music.artist.trim()) || inferredArtist,
+                    album: (music.album && music.album.trim()) || 'Desconhecido',
                     duration: "0:00",
                     cover: music.cover || 'musics/default-cover.jpg',
                     file: arrayBuffer,
