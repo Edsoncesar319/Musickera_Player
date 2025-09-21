@@ -2545,7 +2545,7 @@
         let repeatMode = 'none'; // 'none', 'one', 'all'
 
         // Base de API/backend para recursos (configurável via window.API_BASE_URL ou localStorage)
-        const API_BASE_URL = (typeof window !== 'undefined' && (window.API_BASE_URL || localStorage.getItem('API_BASE_URL'))) || 'https://automatic-giggle-wr97449prwrrc97v7.github.dev';
+        const API_BASE_URL = (typeof window !== 'undefined' && (window.API_BASE_URL || localStorage.getItem('API_BASE_URL'))) || 'http://localhost:5000';
 
         // Loading Animation Control Functions
         function showLoading() {
@@ -4919,7 +4919,7 @@
                 showLoading(); // Show loading animation
                 
                 // Primeiro, extrai o nome da playlist
-                const extractResp = await fetch(`${API_BASE_URL}/extract_playlist_name`, {
+                const extractResp = await fetch('http://localhost:5000/extract_playlist_name', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url })
@@ -4977,7 +4977,7 @@
                 }
                 
                 // Faz o download
-                const resp = await fetch(`${API_BASE_URL}/download_playlist`, {
+                const resp = await fetch('http://localhost:5000/download_playlist', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
@@ -5781,7 +5781,7 @@
                 } catch (e) { /* noop */ }
 
                 // Baixa o arquivo e salva no IndexedDB
-                const response = await fetch(`${API_BASE_URL}${music.path}`);
+                const response = await fetch(`http://localhost:5000${music.path}`);
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
@@ -5825,7 +5825,7 @@
         // Função para criar uma nova playlist
         async function createPlaylist(name) {
             try {
-                const response = await fetch(`${API_BASE_URL}/create_playlist`, {
+                const response = await fetch('http://localhost:5000/create_playlist', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name })
@@ -6071,7 +6071,7 @@
                             }
 
                             // Baixa o arquivo do servidor e salva no IndexedDB
-                            const musicResponse = await fetch(`${API_BASE_URL}${music.path}`);
+                            const musicResponse = await fetch(`http://localhost:5000${music.path}`);
                             const arrayBuffer = await musicResponse.arrayBuffer();
                             
                             // Determina o MIME type baseado na extensão
