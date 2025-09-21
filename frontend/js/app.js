@@ -4,6 +4,8 @@ let currentTrack = 0;
 let isPlaying = false;
 let audio = document.getElementById('playerAudio');
 let repeatMode = 'none'; // 'none', 'one', 'all'
+let shuffleMode = false; // false = ordem normal, true = ordem aleatória
+let shuffledPlaylist = []; // Lista embaralhada para modo shuffle
 
 // Base de API/backend para recursos (configurável via window.API_BASE_URL ou localStorage)
 const API_BASE_URL = (typeof window !== 'undefined' && (window.API_BASE_URL || localStorage.getItem('API_BASE_URL'))) || 'http://localhost:5000';
@@ -277,21 +279,27 @@ function updatePlayerInfo(track) {
 
 // Função para próxima faixa
 function nextTrack() {
-    currentTrack = (currentTrack + 1) % playlist.length;
+    const activePlaylist = getActivePlaylist();
+    currentTrack = (currentTrack + 1) % activePlaylist.length;
     loadTrack();
     document.querySelector('.control-button:nth-child(2)').textContent = isPlaying ? '⏸' : '⏯';
+    
+    // Atualiza o progresso da reprodução sequencial se estiver ativo
+    updateSequentialPlaybackProgress();
 }
 
 // Função para faixa anterior
 function previousTrack() {
-    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+    const activePlaylist = getActivePlaylist();
+    currentTrack = (currentTrack - 1 + activePlaylist.length) % activePlaylist.length;
     loadTrack();
     document.querySelector('.control-button:nth-child(2)').textContent = isPlaying ? '⏸' : '⏯';
 }
 
 // Função para carregar faixa
 function loadTrack() {
-    const track = playlist[currentTrack];
+    const activePlaylist = getActivePlaylist();
+    const track = activePlaylist[currentTrack];
     
     console.log('Carregando faixa:', track);
     
@@ -436,6 +444,12 @@ function togglePlay() {
                 audio.pause();
                 const icon = document.getElementById('playPauseIcon');
                 if (icon) icon.textContent = 'play_arrow';
+                
+                // Remove o indicador de progresso sequencial quando pausa
+                const progressIndicator = document.getElementById('sequentialProgress');
+                if (progressIndicator && progressIndicator.parentNode) {
+                    progressIndicator.parentNode.removeChild(progressIndicator);
+                }
             } else {
                 // Verifica se o áudio está pronto para reprodução
                 if (audio.readyState < 2) {
@@ -511,20 +525,31 @@ function updatePlaylistHTML() {
         const trackList = document.querySelector('.track-list');
         const clearButton = document.querySelector('.clear-playlist');
         
+        // Usa a playlist ativa (normal ou embaralhada) para exibição
+        const activePlaylist = getActivePlaylist();
+        
         // Atualiza a lista de músicas
-        trackList.innerHTML = playlist.map((track, index) => `
-            <li class="track-item ${index === currentTrack ? 'active' : ''}" 
-                onclick="playTrack(${index})">
-                <span class="track-number">${(index + 1).toString().padStart(2, '0')}</span>
-                <img src="${resolveCoverUrl(track.cover || 'musics/default-cover.jpg')}" loading="lazy" alt="capa" style="width:40px;height:40px;border-radius:6px;object-fit:cover;margin-right:8px;">
-                <div class="track-info-small">
-                    <div class="track-title-small">${track.title}</div>
-                    <div class="artist-name-small">${track.artist}</div>
-                </div>
-                <span class="track-duration">${track.duration}</span>
-                <button class="remove-track" onclick="event.stopPropagation(); removeTrack(${index})">×</button>
-            </li>
-        `).join('');
+        trackList.innerHTML = activePlaylist.map((track, index) => {
+            // Encontra o índice original na playlist normal para o onclick
+            const originalIndex = playlist.findIndex(originalTrack => 
+                originalTrack.title === track.title && 
+                originalTrack.artist === track.artist
+            );
+            
+            return `
+                <li class="track-item ${index === currentTrack ? 'active' : ''}" 
+                    onclick="playTrack(${originalIndex})">
+                    <span class="track-number">${(index + 1).toString().padStart(2, '0')}</span>
+                    <img src="${resolveCoverUrl(track.cover || 'musics/default-cover.jpg')}" loading="lazy" alt="capa" style="width:40px;height:40px;border-radius:6px;object-fit:cover;margin-right:8px;">
+                    <div class="track-info-small">
+                        <div class="track-title-small">${track.title}</div>
+                        <div class="artist-name-small">${track.artist}</div>
+                    </div>
+                    <span class="track-duration">${track.duration}</span>
+                    <button class="remove-track" onclick="event.stopPropagation(); removeTrack(${originalIndex})">×</button>
+                </li>
+            `;
+        }).join('');
         
         // Mostra ou esconde o botão de limpar playlist
         clearButton.style.display = playlist.length > 0 ? 'block' : 'none';
@@ -570,10 +595,104 @@ function adjustFontSize() {
 
 // Função para tocar uma música específica
 function playTrack(index) {
-    currentTrack = index;
+    if (shuffleMode) {
+        // No modo shuffle, encontra a música na playlist original e depois na embaralhada
+        const originalTrack = playlist[index];
+        const shuffledIndex = shuffledPlaylist.findIndex(track => 
+            track.title === originalTrack.title && 
+            track.artist === originalTrack.artist
+        );
+        currentTrack = shuffledIndex !== -1 ? shuffledIndex : index;
+    } else {
+        currentTrack = index;
+    }
+    
     loadTrack();
     if (!isPlaying) {
         togglePlay();
+    }
+}
+
+// Função para tocar playlist em sequência
+function playPlaylistSequentially() {
+    if (playlist.length === 0) {
+        alert('Nenhuma música na playlist para reproduzir');
+        return;
+    }
+    
+    // Para a reprodução atual se estiver tocando
+    if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+    }
+    
+    // Inicia do primeiro track da playlist
+    currentTrack = 0;
+    loadTrack();
+    
+    // Inicia a reprodução
+    isPlaying = true;
+    togglePlay();
+    
+    // Atualiza o botão de play para mostrar o estado correto
+    const playButton = document.querySelector('.control-button:nth-child(2)');
+    if (playButton) {
+        playButton.innerHTML = '<span class="material-symbols-rounded">pause</span>';
+    }
+    
+    // Feedback visual para o usuário
+    const playlistTitle = document.getElementById('currentPlaylistTitle');
+    if (playlistTitle) {
+        const originalText = playlistTitle.textContent;
+        const shuffleText = shuffleMode ? ' (Shuffle)' : '';
+        playlistTitle.textContent = `🎵 ${originalText} - Reproduzindo...${shuffleText}`;
+        
+        // Remove o feedback após 3 segundos
+        setTimeout(() => {
+            playlistTitle.textContent = originalText;
+        }, 3000);
+    }
+    
+    // Mostra progresso da reprodução sequencial
+    updateSequentialPlaybackProgress();
+    
+    console.log(`Iniciando reprodução sequencial da playlist com ${playlist.length} músicas`);
+}
+
+// Função para atualizar o progresso da reprodução sequencial
+function updateSequentialPlaybackProgress() {
+    const activePlaylist = getActivePlaylist();
+    const progressText = `Música ${currentTrack + 1} de ${activePlaylist.length}${shuffleMode ? ' (Shuffle)' : ''}`;
+    
+    // Adiciona ou atualiza o indicador de progresso
+    let progressIndicator = document.getElementById('sequentialProgress');
+    if (!progressIndicator) {
+        progressIndicator = document.createElement('div');
+        progressIndicator.id = 'sequentialProgress';
+        progressIndicator.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        `;
+        document.body.appendChild(progressIndicator);
+    }
+    
+    progressIndicator.textContent = progressText;
+    
+    // Remove o indicador quando a reprodução termina
+    if (currentTrack === activePlaylist.length - 1) {
+        setTimeout(() => {
+            if (progressIndicator && progressIndicator.parentNode) {
+                progressIndicator.parentNode.removeChild(progressIndicator);
+            }
+        }, 5000);
     }
 }
 
@@ -708,6 +827,72 @@ function toggleRepeat() {
     }
 }
 
+// Função para embaralhar array (algoritmo Fisher-Yates)
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// Função para alternar modo shuffle
+function toggleShuffle() {
+    const shuffleButton = document.getElementById('shuffleButton');
+    const shuffleIcon = document.getElementById('shuffleIcon');
+    
+    shuffleMode = !shuffleMode;
+    
+    if (shuffleMode) {
+        // Ativa o modo shuffle
+        shuffleButton.classList.add('active');
+        if (shuffleIcon) shuffleIcon.textContent = 'shuffle';
+        
+        // Embaralha a playlist atual
+        shuffledPlaylist = shuffleArray(playlist);
+        
+        // Encontra a posição da música atual na playlist embaralhada
+        const currentTrackData = playlist[currentTrack];
+        const newIndex = shuffledPlaylist.findIndex(track => 
+            track.title === currentTrackData.title && 
+            track.artist === currentTrackData.artist
+        );
+        
+        if (newIndex !== -1) {
+            currentTrack = newIndex;
+        }
+        
+        console.log('Modo shuffle ativado - playlist embaralhada');
+    } else {
+        // Desativa o modo shuffle
+        shuffleButton.classList.remove('active');
+        if (shuffleIcon) shuffleIcon.textContent = 'shuffle';
+        
+        // Encontra a posição da música atual na playlist original
+        const currentTrackData = shuffledPlaylist[currentTrack];
+        const originalIndex = playlist.findIndex(track => 
+            track.title === currentTrackData.title && 
+            track.artist === currentTrackData.artist
+        );
+        
+        if (originalIndex !== -1) {
+            currentTrack = originalIndex;
+        }
+        
+        shuffledPlaylist = [];
+        console.log('Modo shuffle desativado - voltando à ordem original');
+    }
+    
+    // Atualiza a interface
+    updatePlaylistHTML();
+}
+
+// Função para obter a playlist ativa (normal ou embaralhada)
+function getActivePlaylist() {
+    return shuffleMode ? shuffledPlaylist : playlist;
+}
+
 // Inicialização quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
     // Event Listeners
@@ -728,16 +913,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     audio.addEventListener('ended', function() {
+        // Se repetir uma música, apenas reinicia a mesma
         if (repeatMode === 'one') {
             audio.currentTime = 0;
             audio.play();
-        } else if (repeatMode === 'all') {
-            nextTrack();
-        } else {
-            if (currentTrack < playlist.length - 1) {
-                nextTrack();
-            }
+            return;
         }
+
+        // Caso contrário, avança sempre. nextTrack já faz wrap-around.
+        nextTrack();
     });
 
     audio.addEventListener('error', function(e) {
@@ -787,7 +971,9 @@ window.togglePlay = togglePlay;
 window.nextTrack = nextTrack;
 window.previousTrack = previousTrack;
 window.toggleRepeat = toggleRepeat;
+window.toggleShuffle = toggleShuffle;
 window.removeTrack = removeTrack;
 window.clearPlaylist = clearPlaylist;
+window.playPlaylistSequentially = playPlaylistSequentially;
 
 

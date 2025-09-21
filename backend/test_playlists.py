@@ -18,7 +18,7 @@ def test_playlist_endpoints():
     # Test create_playlist
     try:
         response = requests.post(f"{base_url}/create_playlist", 
-                               json={"name": "Test Playlist"})
+        json={"name": "Test Playlist"})
         print(f"Create Playlist - Status: {response.status_code}")
         print(f"Response: {response.text}")
         print()

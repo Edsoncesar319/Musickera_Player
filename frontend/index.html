@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#121212">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="shortcut icon" href="favicon.ico" type="image/png" />
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
     <meta name="google-adsense-account" content="ca-pub-1074925740865557">
     <title>Musickêra</title>
     <style>
@@ -974,6 +974,39 @@
             opacity: 1;
         }
 
+        .control-button.active {
+            background: #1DB954;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
+        }
+
+        .control-button.active:hover {
+            background: #1ed760;
+            transform: scale(1.1);
+        }
+
+        .control-button.bluetooth-connected {
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
+            color: white;
+        }
+
+        .control-button.bluetooth-connected:hover {
+            background: linear-gradient(135deg, #45a049, #5cb85c);
+            transform: scale(1.05);
+        }
+
+        .control-button.bluetooth-connecting {
+            background: linear-gradient(135deg, #FF9800, #FFB74D);
+            color: white;
+            animation: bluetooth-pulse 2s infinite;
+        }
+
+        @keyframes bluetooth-pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
         .play-button {
             background: #1DB954;
             color: #fff;
@@ -1439,7 +1472,7 @@
         }
 
         .playlist-selector select {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(2, 250, 14, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: #fff;
             padding: 10px 16px;
@@ -1452,8 +1485,8 @@
         }
 
         .playlist-selector select:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(51, 250, 1, 0.863);
+            border-color: rgba(5, 247, 78, 0.3)
         }
 
         .playlist {
@@ -2388,8 +2421,14 @@
                     <button class="control-button" onclick="nextTrack()" title="Próxima">
                         <span class="material-symbols-rounded">skip_next</span>
                     </button>
+                    <button class="control-button" onclick="toggleShuffle()" id="shuffleButton" title="Embaralhar">
+                        <span id="shuffleIcon" class="material-symbols-rounded">shuffle</span>
+                    </button>
                     <button class="control-button" onclick="toggleRepeat()" id="repeatButton" title="Repetir">
                         <span id="repeatIcon" class="material-symbols-rounded">repeat</span>
+                    </button>
+                    <button class="control-button" onclick="toggleBluetooth()" id="bluetoothButton" title="Conectar Bluetooth">
+                        <span id="bluetoothIcon" class="material-symbols-rounded">bluetooth</span>
                     </button>
                 </div>
 
@@ -2504,11 +2543,17 @@
                 <div class="playlist-title">
                     <h3 id="currentPlaylistTitle">Todas as Músicas
                     <div class="playlist-actions">
+                        <button class="upload-button" onclick="playPlaylistSequentially()" style="background: #1DB954;">
+                            <span class="material-symbols-rounded">play_arrow</span> Tocar Playlist
+                        </button>
                         <button class="upload-button" onclick="showUploadModal()">
                             <span class="material-symbols-rounded">upload</span> Upload para Playlist
                         </button>
                         <button class="upload-button" onclick="debugPlaylist()" style="background: #ff6b6b;">
                             <span class="material-symbols-rounded">bug_report</span> Verificar
+                        </button>
+                        <button class="upload-button" onclick="testAutoTracking()" style="background: #4CAF50;">
+                            <span class="material-symbols-rounded">refresh</span> Testar Auto-Tracking
                         </button>
                     </div>
                 </div>
@@ -2599,6 +2644,8 @@
                     addedAt: Date.now()
                 };
                 
+                console.log('➕ [BACKGROUND-QUEUE] Adicionando tarefa com prioridade:', priority, 'Total de tarefas:', this.tasks.length + 1);
+                
                 if (priority === 'high') {
                     this.tasks.unshift(taskItem);
                 } else {
@@ -2611,25 +2658,31 @@
             // Processa a fila de tarefas
             async processQueue() {
                 if (this.isProcessing || this.activeTasks >= this.maxConcurrentTasks) {
+                    console.log('🔄 [BACKGROUND-QUEUE] Não pode processar agora - isProcessing:', this.isProcessing, 'activeTasks:', this.activeTasks);
                     return;
                 }
                 
+                console.log('🔄 [BACKGROUND-QUEUE] Iniciando processamento de', this.tasks.length, 'tarefas');
                 this.isProcessing = true;
                 
                 while (this.tasks.length > 0 && this.activeTasks < this.maxConcurrentTasks) {
                     const taskItem = this.tasks.shift();
                     this.activeTasks++;
                     
+                    console.log('🔄 [BACKGROUND-QUEUE] Executando tarefa:', taskItem.priority);
+                    
                     try {
                         await taskItem.task();
+                        console.log('✅ [BACKGROUND-QUEUE] Tarefa concluída');
                     } catch (error) {
-                        console.error('Erro na tarefa em segundo plano:', error);
+                        console.error('❌ [BACKGROUND-QUEUE] Erro na tarefa:', error);
                     } finally {
                         this.activeTasks--;
                     }
                 }
                 
                 this.isProcessing = false;
+                console.log('🔄 [BACKGROUND-QUEUE] Processamento concluído, restam', this.tasks.length, 'tarefas');
                 
                 // Continua processando se ainda há tarefas
                 if (this.tasks.length > 0) {
@@ -3076,17 +3129,61 @@
         }
 
         function nextTrack() {
+            console.log('🎵 [NEXT-TRACK] Mudando para próxima música, atual:', currentTrack, 'total:', playlist.length);
+            
+            if (playlist.length === 0) {
+                console.log('❌ [NEXT-TRACK] Playlist vazia, não é possível avançar');
+                return;
+            }
+            
             currentTrack = (currentTrack + 1) % playlist.length;
+            console.log('🎵 [NEXT-TRACK] Nova música selecionada:', currentTrack, playlist[currentTrack]?.title);
+            
             loadTrack();
+            
             // Atualiza o botão de play para mostrar o estado correto
-            document.querySelector('.control-button:nth-child(2)').textContent = isPlaying ? '⏸' : '⏯';
+            const playButton = document.querySelector('.control-button:nth-child(2)');
+            if (playButton) {
+                playButton.textContent = isPlaying ? '⏸' : '⏯';
+            }
+            
+            // Atualiza a visualização da playlist
+            updatePlaylistView();
+            
+            // Envia comando via Bluetooth se conectado
+            if (isBluetoothConnected) {
+                sendBluetoothCommand('next');
+                controlPlaybackViaBluetooth('next');
+            }
         }
 
         function previousTrack() {
+            console.log('🎵 [PREV-TRACK] Mudando para música anterior, atual:', currentTrack, 'total:', playlist.length);
+            
+            if (playlist.length === 0) {
+                console.log('❌ [PREV-TRACK] Playlist vazia, não é possível voltar');
+                return;
+            }
+            
             currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            console.log('🎵 [PREV-TRACK] Nova música selecionada:', currentTrack, playlist[currentTrack]?.title);
+            
             loadTrack();
+            
             // Atualiza o botão de play para mostrar o estado correto
-            document.querySelector('.control-button:nth-child(2)').textContent = isPlaying ? '⏸' : '⏯';
+            const playButton = document.querySelector('.control-button:nth-child(2)');
+            if (playButton) {
+                playButton.textContent = isPlaying ? '⏸' : '⏯';
+            }
+            
+            // Atualiza a visualização da playlist
+            updatePlaylistView();
+            
+            // Envia comando via Bluetooth se conectado
+            if (isBluetoothConnected) {
+                sendBluetoothCommand('previous');
+                controlPlaybackViaBluetooth('previous');
+            }
         }
 
         function loadTrack() {
@@ -3119,6 +3216,9 @@
                     </div>
                 `;
                 playerContainer.innerHTML = embedHtml;
+                
+                // Configura detecção de fim de música para Deezer
+                setupDeezerAutoNext();
             } else if (track.source === 'youtube') {
                 // For YouTube Music, create an embedded player
                 const playerContainer = document.querySelector('.player-container');
@@ -3132,6 +3232,7 @@
                     </div>
                     <div class="youtube-embed">
                         <iframe 
+                            id="youtube-player"
                             width="100%" 
                             height="350" 
                             src="https://www.youtube.com/embed/${track.youtubeId}?autoplay=${isPlaying ? 1 : 0}&enablejsapi=1" 
@@ -3142,6 +3243,9 @@
                     </div>
                 `;
                 playerContainer.innerHTML = embedHtml;
+                
+                // Configura detecção de fim de música para YouTube
+                setupYouTubeAutoNext();
             } else {
                 // Para músicas locais, usa o player padrão
                 try {
@@ -3208,6 +3312,143 @@
                 } catch (error) {
                     console.error('Erro ao carregar faixa:', error);
                     alert('Erro ao carregar a música. Verifique se o arquivo está correto.');
+                }
+            }
+        }
+
+        // ===== FUNÇÕES DE AUTO-NEXT =====
+        
+        // Função para configurar auto-next do YouTube
+        function setupYouTubeAutoNext() {
+            console.log('🎵 [AUTO-NEXT] Configurando auto-next para YouTube');
+            
+            // Usa polling para detectar quando o vídeo termina
+            let checkInterval;
+            let lastVideoId = null;
+            
+            const checkYouTubeEnd = () => {
+                const iframe = document.getElementById('youtube-player');
+                if (!iframe) return;
+                
+                try {
+                    // Verifica se o iframe ainda está carregado
+                    const currentSrc = iframe.src;
+                    const currentVideoId = currentSrc.match(/embed\/([^?]+)/)?.[1];
+                    
+                    if (currentVideoId && currentVideoId !== lastVideoId) {
+                        lastVideoId = currentVideoId;
+                        console.log('🎵 [AUTO-NEXT] Novo vídeo YouTube detectado:', currentVideoId);
+                        
+                        // Limpa interval anterior se existir
+                        if (checkInterval) {
+                            clearInterval(checkInterval);
+                        }
+                        
+                        // Configura novo polling
+                        checkInterval = setInterval(() => {
+                            try {
+                                // Verifica se o iframe ainda existe e está carregado
+                                if (!iframe.contentWindow) return;
+                                
+                                // Simula detecção de fim (YouTube não permite acesso direto ao estado)
+                                // Usa timeout baseado na duração estimada da música (3-5 minutos)
+                                const estimatedDuration = 4 * 60 * 1000; // 4 minutos em ms
+                                setTimeout(() => {
+                                    console.log('🎵 [AUTO-NEXT] YouTube - tempo estimado esgotado, indo para próxima');
+                                    handleAutoNext();
+                                }, estimatedDuration);
+                                
+                                // Limpa o interval após configurar o timeout
+                                clearInterval(checkInterval);
+                            } catch (e) {
+                                console.log('🎵 [AUTO-NEXT] YouTube - erro ao verificar estado:', e.message);
+                            }
+                        }, 1000);
+                    }
+                } catch (e) {
+                    console.log('🎵 [AUTO-NEXT] YouTube - erro ao verificar iframe:', e.message);
+                }
+            };
+            
+            // Verifica imediatamente e depois a cada 2 segundos
+            checkYouTubeEnd();
+            setInterval(checkYouTubeEnd, 2000);
+        }
+        
+        // Função para configurar auto-next do Deezer
+        function setupDeezerAutoNext() {
+            console.log('🎵 [AUTO-NEXT] Configurando auto-next para Deezer');
+            
+            // Usa polling para detectar mudanças no iframe do Deezer
+            let checkInterval;
+            let lastDeezerId = null;
+            
+            const checkDeezerEnd = () => {
+                const iframe = document.querySelector('.deezer-embed iframe');
+                if (!iframe) return;
+                
+                try {
+                    const currentSrc = iframe.src;
+                    const currentDeezerId = currentSrc.match(/id=([^&]+)/)?.[1];
+                    
+                    if (currentDeezerId && currentDeezerId !== lastDeezerId) {
+                        lastDeezerId = currentDeezerId;
+                        console.log('🎵 [AUTO-NEXT] Nova música Deezer detectada:', currentDeezerId);
+                        
+                        // Limpa interval anterior se existir
+                        if (checkInterval) {
+                            clearInterval(checkInterval);
+                        }
+                        
+                        // Configura polling para detectar fim da música
+                        checkInterval = setInterval(() => {
+                            try {
+                                // Verifica se o iframe ainda existe
+                                if (!iframe.contentWindow) return;
+                                
+                                // Simula detecção de fim (Deezer não permite acesso direto ao estado)
+                                // Usa timeout baseado na duração estimada da música (3-5 minutos)
+                                const estimatedDuration = 4 * 60 * 1000; // 4 minutos em ms
+                                setTimeout(() => {
+                                    console.log('🎵 [AUTO-NEXT] Deezer - tempo estimado esgotado, indo para próxima');
+                                    handleAutoNext();
+                                }, estimatedDuration);
+                                
+                                // Limpa o interval após configurar o timeout
+                                clearInterval(checkInterval);
+                            } catch (e) {
+                                console.log('🎵 [AUTO-NEXT] Deezer - erro ao verificar estado:', e.message);
+                            }
+                        }, 1000);
+                    }
+                } catch (e) {
+                    console.log('🎵 [AUTO-NEXT] Deezer - erro ao verificar iframe:', e.message);
+                }
+            };
+            
+            // Verifica imediatamente e depois a cada 2 segundos
+            checkDeezerEnd();
+            setInterval(checkDeezerEnd, 2000);
+        }
+        
+        // Função centralizada para lidar com auto-next
+        function handleAutoNext() {
+            console.log('🎵 [AUTO-NEXT] Executando auto-next, repeatMode:', repeatMode);
+            
+            if (repeatMode === 'one') {
+                console.log('🔄 [AUTO-NEXT] Modo repeat one - repetindo música atual');
+                loadTrack();
+            } else if (repeatMode === 'all') {
+                console.log('🔄 [AUTO-NEXT] Modo repeat all - indo para próxima música');
+                nextTrack();
+            } else {
+                if (currentTrack < playlist.length - 1) {
+                    console.log('🔄 [AUTO-NEXT] Modo normal - indo para próxima música');
+                    nextTrack();
+                } else {
+                    console.log('🔄 [AUTO-NEXT] Última música da playlist - parando');
+                    isPlaying = false;
+                    document.querySelector('.control-button:nth-child(2)').textContent = '⏯';
                 }
             }
         }
@@ -3521,21 +3762,30 @@
         });
 
         audio.addEventListener('ended', function() {
+            console.log('🎵 [AUTO-NEXT] Música local terminou, repeatMode:', repeatMode);
+            
             // Usa sistema de proteção para transições suaves
             if (repeatMode === 'one') {
+                console.log('🔄 [AUTO-NEXT] Modo repeat one - repetindo música atual');
                 audio.currentTime = 0;
                 audio.play();
             } else if (repeatMode === 'all') {
-                // Agenda próxima faixa em segundo plano para não interromper
-                backgroundTaskQueue.addTask(() => {
+                console.log('🔄 [AUTO-NEXT] Modo repeat all - indo para próxima música');
+                // Executa diretamente para evitar atrasos do backgroundTaskQueue
+                setTimeout(() => {
                     nextTrack();
-                }, 'high');
+                }, 100);
             } else {
                 if (currentTrack < playlist.length - 1) {
-                    // Agenda próxima faixa em segundo plano para não interromper
-                    backgroundTaskQueue.addTask(() => {
+                    console.log('🔄 [AUTO-NEXT] Modo normal - indo para próxima música');
+                    // Executa diretamente para evitar atrasos do backgroundTaskQueue
+                    setTimeout(() => {
                         nextTrack();
-                    }, 'high');
+                    }, 100);
+                } else {
+                    console.log('🔄 [AUTO-NEXT] Última música da playlist - parando');
+                    isPlaying = false;
+                    document.querySelector('.control-button:nth-child(2)').textContent = '⏯';
                 }
             }
         });
@@ -3718,6 +3968,13 @@
                 }
             }
             isPlaying = !isPlaying;
+            
+            // Envia comando via Bluetooth se conectado
+            if (isBluetoothConnected) {
+                const command = isPlaying ? 'play' : 'pause';
+                sendBluetoothCommand(command);
+                controlPlaybackViaBluetooth(command);
+            }
         }
 
         // Função para processar URLs do Deezer
@@ -4017,11 +4274,16 @@
 
         // Função otimizada para verificar mudanças com proteção de continuidade
         async function checkMusicChanges() {
-            if (isUpdating) return;
+            console.log('🔄 [AUTO-TRACKING] Iniciando verificação de mudanças...');
+            
+            if (isUpdating) {
+                console.log('🔄 [AUTO-TRACKING] Já está atualizando, pulando...');
+                return;
+            }
             
             // Se está tocando música, agenda para depois
             if (isPlaying) {
-                console.log('🎵 Música tocando, agendando verificação de mudanças para depois');
+                console.log('🎵 [AUTO-TRACKING] Música tocando, agendando verificação para depois');
                 backgroundTaskQueue.addTask(checkMusicChanges, 'low');
                 return;
             }
@@ -4031,6 +4293,7 @@
                     ? `http://localhost:5000/check_music_changes?playlist=${encodeURIComponent(currentPlaylist)}&last_check=${lastCheckTime}`
                     : `http://localhost:5000/check_music_changes?last_check=${lastCheckTime}`;
                 
+                console.log('🔄 [AUTO-TRACKING] Fazendo requisição para:', url);
                 const response = await fetch(url);
                 const data = await response.json();
                 
@@ -4039,16 +4302,19 @@
                 }
 
                 if (data.changes && data.changes.length > 0) {
-                    console.log(`${data.changes.length} mudanças detectadas`);
+                    console.log(`🔄 [AUTO-TRACKING] ${data.changes.length} mudanças detectadas:`, data.changes);
                     // Processa mudanças em segundo plano para não interromper reprodução
                     backgroundTaskQueue.addTask(async () => {
                         await processMusicChanges(data.changes);
                     }, 'normal');
+                } else {
+                    console.log('🔄 [AUTO-TRACKING] Nenhuma mudança detectada');
                 }
                 
                 lastCheckTime = data.current_time || Date.now() / 1000;
+                console.log('🔄 [AUTO-TRACKING] Verificação concluída, próximo check em 15s');
             } catch (error) {
-                console.error('Erro ao verificar mudanças:', error);
+                console.error('❌ [AUTO-TRACKING] Erro ao verificar mudanças:', error);
             }
         }
 
@@ -4279,8 +4545,7 @@
             }
         }
 
-        // Atualiza a lista de músicas a cada 10 segundos (reduzido de 5 para 10)
-        setInterval(checkMusicChanges, 10000);
+        // Auto-tracking é gerenciado pelo backgroundTaskQueue para evitar conflitos
 
         // Função para tocar uma música específica
         function playTrack(index) {
@@ -4315,6 +4580,331 @@
                     if (repeatIcon) repeatIcon.textContent = 'repeat';
                     break;
             }
+        }
+
+        // ===== FUNÇÕES DE CONTROLE BLUETOOTH =====
+        
+        let bluetoothDevice = null;
+        let bluetoothCharacteristic = null;
+        let isBluetoothConnected = false;
+        let bluetoothService = null;
+
+        // Função para alternar conexão Bluetooth
+        async function toggleBluetooth() {
+            const bluetoothButton = document.getElementById('bluetoothButton');
+            const bluetoothIcon = document.getElementById('bluetoothIcon');
+            
+            if (isBluetoothConnected) {
+                await disconnectBluetooth();
+            } else {
+                await connectBluetooth();
+            }
+        }
+
+        // Função para conectar ao dispositivo Bluetooth
+        async function connectBluetooth() {
+            const bluetoothButton = document.getElementById('bluetoothButton');
+            const bluetoothIcon = document.getElementById('bluetoothIcon');
+            
+            try {
+                console.log('🔵 [BLUETOOTH] Iniciando conexão...');
+                
+                // Atualiza UI para estado de conexão
+                bluetoothButton.classList.add('bluetooth-connecting');
+                bluetoothButton.title = 'Conectando...';
+                if (bluetoothIcon) bluetoothIcon.textContent = 'bluetooth_searching';
+                
+                // Verifica se o navegador suporta Web Bluetooth
+                if (!navigator.bluetooth) {
+                    throw new Error('Bluetooth não é suportado neste navegador');
+                }
+
+                // Solicita dispositivo Bluetooth
+                bluetoothDevice = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: [
+                        'battery_service',
+                        'device_information',
+                        'generic_access',
+                        'generic_attribute',
+                        'audio_control_service',
+                        'media_control_service'
+                    ]
+                });
+
+                console.log('🔵 [BLUETOOTH] Dispositivo selecionado:', bluetoothDevice.name);
+
+                // Conecta ao dispositivo
+                const server = await bluetoothDevice.gatt.connect();
+                console.log('🔵 [BLUETOOTH] Conectado ao servidor GATT');
+
+                // Configura listeners de desconexão
+                bluetoothDevice.addEventListener('gattserverdisconnected', onBluetoothDisconnected);
+
+                // Tenta encontrar serviços de controle de mídia
+                await findMediaControlService(server);
+
+                // Atualiza estado
+                isBluetoothConnected = true;
+                updateBluetoothUI(true);
+                
+                console.log('✅ [BLUETOOTH] Conexão estabelecida com sucesso');
+                
+            } catch (error) {
+                console.error('❌ [BLUETOOTH] Erro na conexão:', error);
+                updateBluetoothUI(false);
+                
+                let errorMessage = 'Erro ao conectar Bluetooth: ';
+                if (error.name === 'NotFoundError') {
+                    errorMessage += 'Nenhum dispositivo encontrado';
+                } else if (error.name === 'SecurityError') {
+                    errorMessage += 'Permissão negada';
+                } else if (error.name === 'NotSupportedError') {
+                    errorMessage += 'Bluetooth não suportado';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                alert(errorMessage);
+            }
+        }
+
+        // Função para desconectar Bluetooth
+        async function disconnectBluetooth() {
+            try {
+                console.log('🔵 [BLUETOOTH] Desconectando...');
+                
+                if (bluetoothDevice && bluetoothDevice.gatt.connected) {
+                    bluetoothDevice.gatt.disconnect();
+                }
+                
+                bluetoothDevice = null;
+                bluetoothCharacteristic = null;
+                bluetoothService = null;
+                isBluetoothConnected = false;
+                
+                updateBluetoothUI(false);
+                console.log('✅ [BLUETOOTH] Desconectado com sucesso');
+                
+            } catch (error) {
+                console.error('❌ [BLUETOOTH] Erro ao desconectar:', error);
+            }
+        }
+
+        // Função para encontrar serviço de controle de mídia
+        async function findMediaControlService(server) {
+            try {
+                // Lista todos os serviços disponíveis
+                const services = await server.getPrimaryServices();
+                console.log('🔵 [BLUETOOTH] Serviços disponíveis:', services.map(s => s.uuid));
+                
+                // Procura por serviços de controle de mídia
+                for (const service of services) {
+                    try {
+                        const characteristics = await service.getCharacteristics();
+                        console.log(`🔵 [BLUETOOTH] Características do serviço ${service.uuid}:`, 
+                            characteristics.map(c => c.uuid));
+                        
+                        // Procura por características de controle
+                        for (const char of characteristics) {
+                            if (char.properties.write || char.properties.writeWithoutResponse) {
+                                bluetoothService = service;
+                                bluetoothCharacteristic = char;
+                                console.log('✅ [BLUETOOTH] Característica de controle encontrada:', char.uuid);
+                                break;
+                            }
+                        }
+                        
+                        if (bluetoothCharacteristic) break;
+                    } catch (e) {
+                        console.log(`🔵 [BLUETOOTH] Erro ao acessar serviço ${service.uuid}:`, e.message);
+                    }
+                }
+                
+                if (!bluetoothCharacteristic) {
+                    console.log('⚠️ [BLUETOOTH] Nenhuma característica de controle encontrada, usando simulação');
+                    setupBluetoothSimulation();
+                }
+                
+            } catch (error) {
+                console.error('❌ [BLUETOOTH] Erro ao encontrar serviço:', error);
+                setupBluetoothSimulation();
+            }
+        }
+
+        // Função para configurar simulação de controle Bluetooth
+        function setupBluetoothSimulation() {
+            console.log('🔵 [BLUETOOTH] Configurando simulação de controle');
+            
+            // Simula controles básicos via eventos de teclado
+            document.addEventListener('keydown', handleBluetoothKeyPress);
+            
+            // Simula controles via Media Session API
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.setActionHandler('play', () => {
+                    console.log('🔵 [BLUETOOTH] Play via Media Session');
+                    if (!isPlaying) togglePlay();
+                });
+                
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    console.log('🔵 [BLUETOOTH] Pause via Media Session');
+                    if (isPlaying) togglePlay();
+                });
+                
+                navigator.mediaSession.setActionHandler('previoustrack', () => {
+                    console.log('🔵 [BLUETOOTH] Previous via Media Session');
+                    previousTrack();
+                });
+                
+                navigator.mediaSession.setActionHandler('nexttrack', () => {
+                    console.log('🔵 [BLUETOOTH] Next via Media Session');
+                    nextTrack();
+                });
+            }
+        }
+
+        // Função para lidar com pressionamentos de tecla (simulação)
+        function handleBluetoothKeyPress(event) {
+            if (!isBluetoothConnected) return;
+            
+            // Controles básicos via teclado
+            switch(event.code) {
+                case 'Space':
+                    event.preventDefault();
+                    togglePlay();
+                    break;
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    previousTrack();
+                    break;
+                case 'ArrowRight':
+                    event.preventDefault();
+                    nextTrack();
+                    break;
+                case 'ArrowUp':
+                    event.preventDefault();
+                    setVolume(Math.min(100, audio.volume * 100 + 10));
+                    break;
+                case 'ArrowDown':
+                    event.preventDefault();
+                    setVolume(Math.max(0, audio.volume * 100 - 10));
+                    break;
+            }
+        }
+
+        // Função para enviar comando via Bluetooth
+        async function sendBluetoothCommand(command) {
+            if (!isBluetoothConnected || !bluetoothCharacteristic) {
+                console.log('🔵 [BLUETOOTH] Dispositivo não conectado, usando simulação');
+                return;
+            }
+            
+            try {
+                const commandData = new TextEncoder().encode(command);
+                await bluetoothCharacteristic.writeValue(commandData);
+                console.log('🔵 [BLUETOOTH] Comando enviado:', command);
+            } catch (error) {
+                console.error('❌ [BLUETOOTH] Erro ao enviar comando:', error);
+            }
+        }
+
+        // Função para atualizar UI do Bluetooth
+        function updateBluetoothUI(connected) {
+            const bluetoothButton = document.getElementById('bluetoothButton');
+            const bluetoothIcon = document.getElementById('bluetoothIcon');
+            
+            if (connected) {
+                bluetoothButton.classList.remove('bluetooth-connecting');
+                bluetoothButton.classList.add('bluetooth-connected');
+                bluetoothButton.title = 'Desconectar Bluetooth';
+                if (bluetoothIcon) bluetoothIcon.textContent = 'bluetooth_connected';
+            } else {
+                bluetoothButton.classList.remove('bluetooth-connecting', 'bluetooth-connected');
+                bluetoothButton.title = 'Conectar Bluetooth';
+                if (bluetoothIcon) bluetoothIcon.textContent = 'bluetooth';
+            }
+        }
+
+        // Função chamada quando Bluetooth desconecta
+        function onBluetoothDisconnected() {
+            console.log('🔵 [BLUETOOTH] Dispositivo desconectado');
+            isBluetoothConnected = false;
+            updateBluetoothUI(false);
+            
+            // Remove listeners de simulação
+            document.removeEventListener('keydown', handleBluetoothKeyPress);
+        }
+
+        // Função para controlar reprodução via Bluetooth
+        function controlPlaybackViaBluetooth(action) {
+            if (!isBluetoothConnected) return;
+            
+            console.log('🔵 [BLUETOOTH] Controlando reprodução:', action);
+            
+            switch(action) {
+                case 'play':
+                    if (!isPlaying) togglePlay();
+                    break;
+                case 'pause':
+                    if (isPlaying) togglePlay();
+                    break;
+                case 'next':
+                    nextTrack();
+                    break;
+                case 'previous':
+                    previousTrack();
+                    break;
+                case 'volume_up':
+                    setVolume(Math.min(100, audio.volume * 100 + 10));
+                    break;
+                case 'volume_down':
+                    setVolume(Math.max(0, audio.volume * 100 - 10));
+                    break;
+            }
+        }
+
+        // Função para definir volume com integração Bluetooth
+        function setVolume(volume) {
+            // Garante que o volume está entre 0 e 100
+            volume = Math.max(0, Math.min(100, volume));
+            
+            // Define o volume do áudio
+            audio.volume = volume / 100;
+            
+            // Atualiza os sliders de volume
+            const masterVolumeSlider = document.getElementById('masterVolume');
+            const simpleVolumeSlider = document.getElementById('simpleVolume');
+            
+            if (masterVolumeSlider) {
+                masterVolumeSlider.value = volume;
+            }
+            if (simpleVolumeSlider) {
+                simpleVolumeSlider.value = volume;
+            }
+            
+            // Atualiza os valores exibidos
+            const masterVolumeValue = document.getElementById('masterVolumeValue');
+            const simpleVolumeValue = document.getElementById('simpleVolumeValue');
+            
+            if (masterVolumeValue) {
+                masterVolumeValue.textContent = volume + '%';
+            }
+            if (simpleVolumeValue) {
+                simpleVolumeValue.textContent = volume + '%';
+            }
+            
+            // Atualiza masterVolume global
+            masterVolume = volume;
+            leftVolume = volume;
+            rightVolume = volume;
+            
+            // Envia comando via Bluetooth se conectado
+            if (isBluetoothConnected) {
+                sendBluetoothCommand(`volume:${volume}`);
+                console.log('🔵 [BLUETOOTH] Volume definido via Bluetooth:', volume);
+            }
+            
+            console.log('🔊 [VOLUME] Volume definido para:', volume + '%');
         }
 
         // Adiciona o evento de redimensionamento
@@ -4533,6 +5123,33 @@
             } catch (error) {
                 console.error('❌ [PRIORIDADE 2] Erro na verificação inicial:', error);
             }
+        }
+
+        // Função para testar o auto-tracking
+        function testAutoTracking() {
+            console.log('🧪 [TESTE] Iniciando teste do auto-tracking...');
+            
+            // Mostra status atual
+            console.log('🧪 [TESTE] Status atual:');
+            console.log('- isPlaying:', isPlaying);
+            console.log('- isUpdating:', isUpdating);
+            console.log('- lastCheckTime:', lastCheckTime);
+            console.log('- currentPlaylist:', currentPlaylist);
+            console.log('- backgroundTaskQueue.tasks.length:', backgroundTaskQueue.tasks.length);
+            console.log('- backgroundTaskQueue.isProcessing:', backgroundTaskQueue.isProcessing);
+            console.log('- backgroundTaskQueue.activeTasks:', backgroundTaskQueue.activeTasks);
+            
+            // Força uma verificação manual
+            console.log('🧪 [TESTE] Forçando verificação manual...');
+            checkMusicChanges();
+            
+            // Mostra resultado após 2 segundos
+            setTimeout(() => {
+                console.log('🧪 [TESTE] Status após teste:');
+                console.log('- backgroundTaskQueue.tasks.length:', backgroundTaskQueue.tasks.length);
+                console.log('- backgroundTaskQueue.isProcessing:', backgroundTaskQueue.isProcessing);
+                console.log('- backgroundTaskQueue.activeTasks:', backgroundTaskQueue.activeTasks);
+            }, 2000);
         }
         
         // ===== SISTEMA DE BARRA DE PROGRESSO DE DOWNLOAD =====
